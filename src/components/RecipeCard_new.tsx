@@ -169,8 +169,8 @@ function enhanceInstruction(instruction: string, stepNumber: number): string {
     "Next up, we're going to ",
     "Time for step " + stepNumber + "! ",
     "Here's where it gets exciting - ",
-    "Don't worry, this part is easy! ",
-    "You've got this! Now ",
+    "Don\\'t worry, this part is easy! ",
+    "You\\'ve got this! Now ",
     "Almost there! Next, ",
     "This is my favorite part - ",
     "Trust the process and "
@@ -178,7 +178,7 @@ function enhanceInstruction(instruction: string, stepNumber: number): string {
   
   const encouragements = [
     " (You're doing great!)",
-    " (Don't rush this part - take your time!)",
+    " (Don\\'t rush this part - take your time!)",
     " (This is where the magic happens!)",
     " (Your kitchen probably smells amazing right now!)",
     " (Pro tip: taste as you go!)",
