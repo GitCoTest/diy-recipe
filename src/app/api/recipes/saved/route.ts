@@ -211,7 +211,7 @@ export async function PATCH(request: NextRequest) {
 
     console.log("⭐ BACKEND: Updating recipe:", recipeId, "favorite:", favorite);
 
-    const updateData: any = {};
+    const updateData: { favorite?: boolean } = {};
     if (typeof favorite === 'boolean') {
       updateData.favorite = favorite;
     }

@@ -24,7 +24,7 @@ interface Recipe {
 }
 
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user] = useState<User | null>(null);
   const [selectedIngredients, setSelectedIngredients] = useState<{ base: string[], main: string[] }>({ base: [], main: [] });
   const [selectedPreferences, setSelectedPreferences] = useState<{ mealType: string, dietary: string }>({ mealType: '', dietary: '' });
   const [generatedRecipes, setGeneratedRecipes] = useState<Recipe[]>([]);
