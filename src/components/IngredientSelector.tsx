@@ -403,51 +403,51 @@ export default function IngredientSelector({ onIngredientsChange }: IngredientSe
         </div>
       )}
 
-      {/* Base Ingredients */}
-      <div className="bg-white bg-opacity-40 p-8 rounded-2xl shadow-sm border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
-        <h3 className="text-lg font-bold text-gray-900 mb-4 bg-pink-100 bg-opacity-50 p-2 rounded">
+      {/* Base Ingredients - mobile optimized */}
+      <div className="bg-white bg-opacity-40 p-2 sm:p-4 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm border-2 sm:border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
+        <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-2 sm:mb-4 bg-pink-100 bg-opacity-50 p-1 sm:p-2 rounded text-center">
           Base Ingredients
         </h3>
         
-        {/* Search Input */}
-        <div className="flex gap-2 mb-4">
+        {/* Search Input - compact */}
+        <div className="flex gap-1 sm:gap-2 mb-2 sm:mb-4">
           <input
             type="text"
             value={baseSearchTerm}
             onChange={(e) => handleBaseSearch(e.target.value)}
-            placeholder="Search or add ingredient..."
-            className="flex-1 px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-800 placeholder-gray-500 text-sm"
+            placeholder="Search..."
+            className="flex-1 px-2 sm:px-3 py-1 sm:py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-800 placeholder-gray-500 text-xs sm:text-sm"
             onKeyPress={(e) => e.key === 'Enter' && validateAndAddCustomIngredient(customBaseInput, 'base')}
             disabled={isValidatingBase}
           />
           <button
             onClick={() => validateAndAddCustomIngredient(customBaseInput, 'base')}
             disabled={isValidatingBase || !customBaseInput.trim()}
-            className="px-3 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold transition-colors flex items-center justify-center text-sm w-16"
+            className="px-2 sm:px-3 py-1 sm:py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold transition-colors flex items-center justify-center text-xs sm:text-sm w-8 sm:w-16"
           >
             {isValidatingBase ? '...' : findExactMatch(baseIngredients, baseSearchTerm) ? '✓' : '+'}
           </button>
         </div>
 
-        {/* Filtered Ingredients List */}
-        <div className="space-y-2 max-h-48 overflow-y-auto border border-gray-200 rounded p-2">
+        {/* Filtered Ingredients List - compact */}
+        <div className="space-y-1 sm:space-y-2 max-h-32 sm:max-h-48 overflow-y-auto border border-gray-200 rounded p-1 sm:p-2">
           {getFilteredIngredients(baseIngredients, selectedBaseIngredients, baseSearchTerm).length === 0 && baseSearchTerm ? (
-            <div className="text-center py-4 text-gray-500">
-              <div className="text-sm">No ingredients found matching "{baseSearchTerm}"</div>
-              <div className="text-xs mt-1">Press Enter or click "+" to add it as a new ingredient</div>
+            <div className="text-center py-2 sm:py-4 text-gray-500">
+              <div className="text-xs sm:text-sm">No ingredients found</div>
+              <div className="text-xs mt-1 hidden sm:block">Press Enter or click "+" to add it</div>
             </div>
           ) : (
             getFilteredIngredients(baseIngredients, selectedBaseIngredients, baseSearchTerm).map((ingredient) => (
-              <label key={ingredient.name} className={`flex items-center space-x-3 p-2 hover:bg-gray-50 cursor-pointer rounded transition-colors ${
-                selectedBaseIngredients.includes(ingredient.name) ? 'bg-pink-50 border-l-4 border-pink-400' : ''
+              <label key={ingredient.name} className={`flex items-center space-x-1 sm:space-x-3 p-1 sm:p-2 hover:bg-gray-50 cursor-pointer rounded transition-colors ${
+                selectedBaseIngredients.includes(ingredient.name) ? 'bg-pink-50 border-l-2 sm:border-l-4 border-pink-400' : ''
               }`}>
                 <input
                   type="checkbox"
                   checked={selectedBaseIngredients.includes(ingredient.name)}
                   onChange={() => toggleBaseIngredient(ingredient.name)}
-                  className="w-4 h-4 text-pink-600 rounded focus:ring-pink-500"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-pink-600 rounded focus:ring-pink-500"
                 />
-                <span className={`font-medium ${
+                <span className={`font-medium text-xs sm:text-sm ${
                   selectedBaseIngredients.includes(ingredient.name) ? 'text-pink-700 font-bold' : 'text-gray-900'
                 }`}>
                   {ingredient.name.toLowerCase()}
@@ -458,51 +458,51 @@ export default function IngredientSelector({ onIngredientsChange }: IngredientSe
         </div>
       </div>
 
-      {/* Main Ingredients */}
-      <div className="bg-white bg-opacity-40 p-8 rounded-2xl shadow-sm border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
-        <h3 className="text-lg font-bold text-gray-900 mb-4 bg-pink-100 bg-opacity-50 p-2 rounded">
+      {/* Main Ingredients - mobile optimized */}
+      <div className="bg-white bg-opacity-40 p-2 sm:p-4 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm border-2 sm:border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
+        <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-2 sm:mb-4 bg-pink-100 bg-opacity-50 p-1 sm:p-2 rounded text-center">
           Main Ingredients
         </h3>
         
-        {/* Search Input */}
-        <div className="flex gap-2 mb-4">
+        {/* Search Input - compact */}
+        <div className="flex gap-1 sm:gap-2 mb-2 sm:mb-4">
           <input
             type="text"
             value={mainSearchTerm}
             onChange={(e) => handleMainSearch(e.target.value)}
-            placeholder="Search or add ingredient..."
-            className="flex-1 px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-800 placeholder-gray-500 text-sm"
+            placeholder="Search..."
+            className="flex-1 px-2 sm:px-3 py-1 sm:py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-800 placeholder-gray-500 text-xs sm:text-sm"
             onKeyPress={(e) => e.key === 'Enter' && validateAndAddCustomIngredient(customMainInput, 'main')}
             disabled={isValidatingMain}
           />
           <button
             onClick={() => validateAndAddCustomIngredient(customMainInput, 'main')}
             disabled={isValidatingMain || !customMainInput.trim()}
-            className="px-3 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold transition-colors flex items-center justify-center text-sm w-16"
+            className="px-2 sm:px-3 py-1 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed font-bold transition-colors flex items-center justify-center text-xs sm:text-sm w-8 sm:w-16"
           >
             {isValidatingMain ? '...' : findExactMatch(mainIngredients, mainSearchTerm) ? '✓' : '+'}
           </button>
         </div>
 
-        {/* Filtered Ingredients List */}
-        <div className="space-y-2 max-h-48 overflow-y-auto border border-gray-200 rounded p-2">
+        {/* Filtered Ingredients List - compact */}
+        <div className="space-y-1 sm:space-y-2 max-h-32 sm:max-h-48 overflow-y-auto border border-gray-200 rounded p-1 sm:p-2">
           {getFilteredIngredients(mainIngredients, selectedMainIngredients, mainSearchTerm).length === 0 && mainSearchTerm ? (
-            <div className="text-center py-4 text-gray-500">
-              <div className="text-sm">No ingredients found matching "{mainSearchTerm}"</div>
-              <div className="text-xs mt-1">Press Enter or click "+" to add it as a new ingredient</div>
+            <div className="text-center py-2 sm:py-4 text-gray-500">
+              <div className="text-xs sm:text-sm">No ingredients found</div>
+              <div className="text-xs mt-1 hidden sm:block">Press Enter or click "+" to add it</div>
             </div>
           ) : (
             getFilteredIngredients(mainIngredients, selectedMainIngredients, mainSearchTerm).map((ingredient) => (
-              <label key={ingredient.name} className={`flex items-center space-x-3 p-2 hover:bg-gray-50 cursor-pointer rounded transition-colors ${
-                selectedMainIngredients.includes(ingredient.name) ? 'bg-orange-50 border-l-4 border-orange-400' : ''
+              <label key={ingredient.name} className={`flex items-center space-x-1 sm:space-x-3 p-1 sm:p-2 hover:bg-gray-50 cursor-pointer rounded transition-colors ${
+                selectedMainIngredients.includes(ingredient.name) ? 'bg-orange-50 border-l-2 sm:border-l-4 border-orange-400' : ''
               }`}>
                 <input
                   type="checkbox"
                   checked={selectedMainIngredients.includes(ingredient.name)}
                   onChange={() => toggleMainIngredient(ingredient.name)}
-                  className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-orange-600 rounded focus:ring-orange-500"
                 />
-                <span className={`font-medium ${
+                <span className={`font-medium text-xs sm:text-sm ${
                   selectedMainIngredients.includes(ingredient.name) ? 'text-orange-700 font-bold' : 'text-gray-900'
                 }`}>
                   {ingredient.name.toLowerCase()}

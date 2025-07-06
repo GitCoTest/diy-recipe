@@ -255,8 +255,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Ingredient Selection and Preferences - responsive */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 mt-6 sm:mt-8">
+        {/* Ingredient Selection and Preferences - mobile 2x2 grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-6 mb-6 sm:mb-8 mt-6 sm:mt-8">
           <IngredientSelector onIngredientsChange={handleIngredientsChange} />
           <Preferences onPreferencesChange={handlePreferencesChange} />
         </div>
