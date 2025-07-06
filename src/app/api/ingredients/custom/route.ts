@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-// Type definitions
-interface CustomIngredient {
-  id: string;
-  name: string;
-  category: string;
-  validated: boolean;
-  userId: string;
-  createdAt: Date;
-}
+// Type definitions (commented out unused interface)
+// interface CustomIngredient {
+//   id: string;
+//   name: string;
+//   category: string;
+//   validated: boolean;
+//   userId: string;
+//   createdAt: Date;
+// }
 
 // Save a custom ingredient
 export async function POST(request: NextRequest) {
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      ingredients: customIngredients.map((ing: any) => ({
+      ingredients: customIngredients.map((ing: { id: string; name: string; category: string; validated: boolean }) => ({
         id: ing.id,
         name: ing.name,
         category: ing.category,

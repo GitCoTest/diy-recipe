@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export interface User {
   id: string
@@ -71,7 +72,7 @@ export const auth = {
   },
 
   // Listen to auth changes
-  onAuthStateChange: (callback: (user: any) => void) => {
+  onAuthStateChange: (callback: (user: SupabaseUser | null) => void) => {
     return supabase.auth.onAuthStateChange((event, session) => {
       callback(session?.user ?? null)
     })

@@ -14,13 +14,16 @@ export default function Preferences({ onPreferencesChange }: PreferencesProps) {
     { name: 'Breakfast', emoji: '🌅' },
     { name: 'Lunch', emoji: '☀️' },
     { name: 'Dinner', emoji: '🌙' },
-    { name: 'Snacks', emoji: '🍿' }
+    { name: 'Snacks', emoji: '🍿' },
+    { name: 'Desserts', emoji: '🍰' }
   ];
 
   const dietaryOptions = [
     { name: 'Vegan', emoji: '🌱' },
     { name: 'Vegetarian', emoji: '🥗' },
-    { name: 'Non-Vegetarian', emoji: '🍗' }
+    { name: 'Non-Vegetarian', emoji: '🍗' },
+    { name: 'Keto', emoji: '🥑' },
+    { name: 'Gluten Free', emoji: '🌾' }
   ];
 
   const selectMealType = (mealType: string) => {
@@ -40,7 +43,7 @@ export default function Preferences({ onPreferencesChange }: PreferencesProps) {
         <h3 className="text-lg font-bold text-gray-900 mb-4 bg-pink-100 bg-opacity-50 p-2 rounded">
           Meal Type
         </h3>
-        <div className="space-y-2 max-h-48 overflow-y-auto border border-gray-200 rounded p-2">
+        <div className="space-y-2 max-h-60 overflow-y-auto border border-gray-200 rounded p-2">
           {mealTypes.map((meal) => (
             <label key={meal.name} className="flex items-center space-x-3 p-2 hover:bg-gray-50 cursor-pointer">
               <input
@@ -61,7 +64,7 @@ export default function Preferences({ onPreferencesChange }: PreferencesProps) {
         <h3 className="text-lg font-bold text-gray-900 mb-4 bg-pink-100 bg-opacity-50 p-2 rounded">
           Dietary Needs
         </h3>
-        <div className="space-y-2 max-h-48 overflow-y-auto border border-gray-200 rounded p-2">
+        <div className="space-y-2 max-h-60 overflow-y-auto border border-gray-200 rounded p-2">
           {dietaryOptions.map((diet) => (
             <label key={diet.name} className="flex items-center space-x-3 p-2 hover:bg-gray-50 cursor-pointer">
               <input

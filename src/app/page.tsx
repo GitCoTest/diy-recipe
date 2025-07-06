@@ -1,10 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import IngredientSelector from '@/components/IngredientSelector';
 import Preferences from '@/components/Preferences';
 import RecipeCard from '@/components/RecipeCard';
 import Mascot from '@/components/Mascot';
+import { supabase } from '@/lib/supabase';
+import type { User } from '@supabase/supabase-js';
 
 interface Recipe {
   title: string;
@@ -22,8 +26,8 @@ export default function Home() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
+  const [user, setUser] = useState<User | null>(null);
+  
   const handleIngredientsChange = (ingredients: { base: string[], main: string[] }) => {
     setSelectedIngredients(ingredients);
   };
@@ -61,6 +65,17 @@ export default function Home() {
 
       const data = await response.json();
       setGeneratedRecipes(data.recipes);
+      
+      // Auto-scroll to recipes section after generation
+      setTimeout(() => {
+        const recipesSection = document.querySelector('[data-recipes-section]');
+        if (recipesSection) {
+          recipesSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
     } catch (error) {
       console.error('Error generating recipes:', error);
       alert('Failed to generate recipes. Please try again.');
@@ -112,16 +127,31 @@ export default function Home() {
     setShowRecipeModal(true);
   };
 
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    getUser();
+    // Listen for auth changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-yellow-50">
       {/* Floating, rounded header navigation and settings button */}
       <div className="w-full flex justify-center items-start pt-4 pb-2 z-40 relative">
         <div className="flex flex-row gap-4 w-auto">
           <nav className="floating-zoom flex flex-row gap-6 md:gap-10 px-6 py-2 bg-white/90 backdrop-blur border border-pink-200 shadow-xl rounded-full items-center text-base md:text-lg font-bold text-gray-800">
-            <a href="/" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
+            <Link href="/" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
               <span className="text-xl md:text-2xl">🏠</span>
               <span className="tracking-wide">Home</span>
-            </a>
+            </Link>
             <a href="#discover" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
               <span className="text-xl md:text-2xl">🔎</span>
               <span className="tracking-wide">Discover</span>
@@ -130,10 +160,10 @@ export default function Home() {
               <span className="text-xl md:text-2xl">💡</span>
               <span className="tracking-wide">Surprise Me!</span>
             </button>
-            <a href="#saved" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
+            <button onClick={() => window.location.href = '/saved-recipes'} className="flex items-center gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer">
               <span className="text-xl md:text-2xl">📖</span>
               <span className="tracking-wide">Saved</span>
-            </a>
+            </button>
             <a href="#grocery" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
               <span className="text-xl md:text-2xl">🛒</span>
               <span className="tracking-wide">Grocery</span>
@@ -192,11 +222,13 @@ export default function Home() {
         {/* Heading Image with Simple Sparkle Animation */}
         <div className="text-center mt-0 mb-0 relative">
           <div className="relative inline-block">
-            <img 
+            <Image 
               src="/customize-your-meal-heading.png" 
               alt="Customize Your Meal" 
               className="mx-auto max-w-full h-auto rounded-2xl transition-transform duration-200"
               style={{ maxHeight: '200px' }}
+              width={600}
+              height={200}
             />
             {/* More tiny star sparkles */}
             <div className="absolute inset-0 pointer-events-none">
@@ -254,7 +286,7 @@ export default function Home() {
 
         {/* Generated Recipes */}
         {generatedRecipes.length > 0 && (
-          <div className="mb-12">
+          <div className="mb-12" data-recipes-section>
             <h2 className="text-3xl font-bold text-center text-purple-800 mb-8">
               Your Personalized Recipes ✨
             </h2>

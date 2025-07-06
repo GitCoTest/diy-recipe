@@ -1,18 +1,6 @@
-// Force load environment variables
-import { config } from 'dotenv';
-config({ path: '.env.local' });
-
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { supabase } from '@/lib/supabase';
-
-// Debug: Check environment variables at the top of the file
-console.log('=== API Route Environment Check ===');
-console.log('OPENAI_API_KEY present:', !!process.env.OPENAI_API_KEY);
-console.log('NEXT_PUBLIC_SUPABASE_URL present:', !!process.env.NEXT_PUBLIC_SUPABASE_URL);
-console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY present:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-console.log('NEXT_PUBLIC_SUPABASE_URL value:', process.env.NEXT_PUBLIC_SUPABASE_URL || 'UNDEFINED');
-console.log('All SUPABASE env vars:', Object.keys(process.env).filter(key => key.includes('SUPABASE')));
 
 // Create OpenAI client only if API key is available
 let openai: OpenAI | null = null;
@@ -20,7 +8,6 @@ if (process.env.OPENAI_API_KEY) {
   openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
-  console.log('✅ OpenAI client created successfully');
 } else {
   console.error('❌ OpenAI API key not found');
 }
@@ -128,7 +115,7 @@ async function generateRecipesWithGPT(params: GenerateRecipeParams): Promise<Rec
   const randomSeed = Math.floor(Math.random() * 1000000);
   
   const prompt = surpriseMode ? 
-    `Generate 2 completely random and creative recipes. Use this random seed for inspiration: ${randomSeed}. 
+    `Generate 4-5 completely random and creative recipes. Use this random seed for inspiration: ${randomSeed}. 
     
     Be wildly creative! Consider:
     - Fusion cuisines (Korean-Mexican, Italian-Thai, etc.)
@@ -157,7 +144,7 @@ Return only this JSON format:
     }
   ]
 }` :
-    `You are a friendly chef and close friend. Create 2-3 delicious recipes using these ingredients and preferences:
+    `You are a friendly chef and close friend. Create 4-5 delicious recipes using these ingredients and preferences:
 
 🥄 BASE INGREDIENTS: ${baseIngredients.length > 0 ? baseIngredients.join(', ') : 'Choose appropriate base ingredients'}
 🥘 MAIN INGREDIENTS: ${mainIngredients.length > 0 ? mainIngredients.join(', ') : 'Choose appropriate main ingredients'}
@@ -296,6 +283,56 @@ function generateFallbackRecipes(params: GenerateRecipeParams): Recipe[] {
           "Drizzle with oil and lemon",
           "Season with oregano and serve"
         ]
+      },
+      {
+        id: 3,
+        title: "🌮 Surprise Fusion Tacos",
+        image: "🌮",
+        description: "Creative fusion tacos with unexpected flavors!",
+        cookTime: "20 mins",
+        difficulty: "Medium",
+        servings: 3,
+        ingredients: [
+          "6 corn tortillas",
+          "1 cup cooked rice",
+          "1 cup black beans",
+          "1/2 cup kimchi",
+          "2 tbsp sriracha mayo",
+          "Cilantro and lime"
+        ],
+        instructions: [
+          "Warm tortillas in a dry pan",
+          "Heat rice and beans separately",
+          "Mix sriracha with mayo",
+          "Fill tortillas with rice and beans",
+          "Top with kimchi and sauce",
+          "Garnish with cilantro and lime"
+        ]
+      },
+      {
+        id: 4,
+        title: "🍜 Random Ramen Bowl",
+        image: "🍜",
+        description: "A creative take on instant ramen!",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        servings: 2,
+        ingredients: [
+          "2 packs instant ramen",
+          "2 eggs",
+          "1 cup frozen vegetables",
+          "2 tbsp soy sauce",
+          "1 tsp sesame oil",
+          "Green onions for garnish"
+        ],
+        instructions: [
+          "Boil water and cook ramen noodles",
+          "Soft boil eggs for 6-7 minutes",
+          "Add frozen vegetables to ramen",
+          "Season with soy sauce and sesame oil",
+          "Top with halved eggs",
+          "Garnish with chopped green onions"
+        ]
       }
     ];
   }
@@ -322,6 +359,108 @@ function generateFallbackRecipes(params: GenerateRecipeParams): Recipe[] {
         'Season with salt, pepper, and spices',
         'Cook until everything is well combined',
         'Serve hot and enjoy!'
+      ]
+    },
+    {
+      id: 2,
+      title: `Quick ${mealType || 'Easy'} ${dietary || 'Recipe'}`.trim(),
+      image: '⚡',
+      description: `A fast and simple ${dietary ? dietary.toLowerCase() + ' ' : ''}recipe when you're short on time.`,
+      cookTime: '15 mins',
+      difficulty: 'Easy',
+      servings: 2,
+      ingredients: [
+        ...(mainIngredients.length > 0 ? mainIngredients.slice(0, 2).map((ing: string) => `1.5 cups ${ing}`) : ['1.5 cups vegetables']),
+        ...(baseIngredients.length > 0 ? baseIngredients.slice(0, 1).map((ing: string) => `1/2 cup ${ing}`) : ['1/2 cup rice']),
+        'Olive oil',
+        'Garlic powder',
+        'Fresh herbs (optional)'
+      ],
+      instructions: [
+        'Heat olive oil in a pan over medium heat',
+        'Add your main ingredients and cook for 8-10 minutes',
+        'Add base ingredients and mix well',
+        'Season with garlic powder and herbs',
+        'Cook until heated through',
+        'Serve immediately'
+      ]
+    },
+    {
+      id: 3,
+      title: `Hearty ${mealType || 'Comfort'} ${dietary || 'Bowl'}`.trim(),
+      image: '🍲',
+      description: `A satisfying and filling ${dietary ? dietary.toLowerCase() + ' ' : ''}meal that will keep you satisfied.`,
+      cookTime: '35 mins',
+      difficulty: 'Medium',
+      servings: 6,
+      ingredients: [
+        ...(baseIngredients.length > 1 ? baseIngredients.slice(0, 2).map((ing: string) => `1.5 cups ${ing}`) : ['1.5 cups grains', '1 cup legumes']),
+        ...(mainIngredients.length > 1 ? mainIngredients.slice(0, 2).map((ing: string) => `1 cup ${ing}`) : ['1 cup mixed vegetables']),
+        'Vegetable or chicken broth',
+        'Onion and garlic',
+        'Bay leaves',
+        'Salt and pepper'
+      ],
+      instructions: [
+        'Sauté onion and garlic until fragrant',
+        'Add base ingredients and toast briefly',
+        'Pour in broth and add bay leaves',
+        'Bring to a boil, then reduce heat and simmer',
+        'Add main ingredients and cook for 20-25 minutes',
+        'Season with salt and pepper',
+        'Remove bay leaves before serving'
+      ]
+    },
+    {
+      id: 4,
+      title: `Creative ${mealType || 'Fusion'} ${dietary || 'Dish'}`.trim(),
+      image: '🎨',
+      description: `An innovative ${dietary ? dietary.toLowerCase() + ' ' : ''}recipe with unique flavor combinations.`,
+      cookTime: '20 mins',
+      difficulty: 'Medium',
+      servings: 3,
+      ingredients: [
+        ...(mainIngredients.length > 0 ? mainIngredients.slice(-1).map((ing: string) => `2 cups ${ing}`) : ['2 cups seasonal vegetables']),
+        ...(baseIngredients.length > 0 ? baseIngredients.slice(-1).map((ing: string) => `1 cup ${ing}`) : ['1 cup quinoa']),
+        'Coconut oil',
+        'Ginger and lime',
+        'Soy sauce or tamari',
+        'Sesame seeds'
+      ],
+      instructions: [
+        'Cook base ingredients according to package directions',
+        'Heat coconut oil in a large skillet',
+        'Add ginger and cook for 30 seconds',
+        'Add main ingredients and stir-fry for 5-7 minutes',
+        'Mix in cooked base ingredients',
+        'Season with soy sauce and lime juice',
+        'Garnish with sesame seeds and serve'
+      ]
+    },
+    {
+      id: 5,
+      title: `Simple ${mealType || 'Classic'} ${dietary || 'Favorite'}`.trim(),
+      image: '❤️',
+      description: `A simple yet delicious ${dietary ? dietary.toLowerCase() + ' ' : ''}version of a beloved classic.`,
+      cookTime: '30 mins',
+      difficulty: 'Easy',
+      servings: 4,
+      ingredients: [
+        ...(baseIngredients.length > 0 ? baseIngredients.slice(0, 1).map((ing: string) => `2 cups ${ing}`) : ['2 cups pasta or rice']),
+        ...(mainIngredients.length > 0 ? mainIngredients.slice(0, 2).map((ing: string) => `1.5 cups ${ing}`) : ['1.5 cups protein', '1.5 cups vegetables']),
+        'Olive oil',
+        'Italian seasoning',
+        'Fresh basil',
+        'Parmesan cheese (optional)'
+      ],
+      instructions: [
+        'Cook base ingredients according to package directions',
+        'Heat olive oil in a large pan',
+        'Add main ingredients and cook until tender',
+        'Combine with cooked base ingredients',
+        'Season with Italian seasoning and fresh basil',
+        'Top with Parmesan if desired',
+        'Let flavors meld for 5 minutes before serving'
       ]
     }
   ];

@@ -9,14 +9,18 @@ import RecipeCard from '@/components/RecipeCard';
 import Mascot from '@/components/Mascot';
 import CustomizeModal from '@/components/CustomizeModal';
 import RecipeModal from '@/components/RecipeModal';
-import { getCurrentUser } from '@/lib/auth';
+import Image from 'next/image';
 
 interface Recipe {
+  id: number;
   title: string;
+  image: string;
+  description: string;
+  cookTime: string;
+  difficulty: string;
   ingredients: string[];
   instructions: string[];
-  prepTime?: string;
-  difficulty?: string;
+  servings: number;
 }
 
 export default function Home() {
@@ -31,11 +35,7 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-    fetchUser();
+    // Removed getCurrentUser usage since it does not exist
   }, []);
 
   const handleIngredientsChange = (ingredients: { base: string[], main: string[] }) => {
@@ -86,16 +86,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
-      <Header user={user} />
+      <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-6">
-            <img 
+            <Image 
               src="/customize-your-meal-heading.png" 
               alt="Customize Your Meal" 
               className="h-16 md:h-20 object-contain"
+              width={400}
+              height={80}
+              priority
             />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-purple-800 mb-4">
@@ -103,7 +106,7 @@ export default function Home() {
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Turn your available ingredients into delicious recipes with the help of AI! 
-            Just select what you have, and we'll create personalized recipes for you.
+            Just select what you have, and we&apos;ll create personalized recipes for you.
           </p>
         </div>
 
@@ -202,18 +205,20 @@ export default function Home() {
 
       {/* Modals */}
       {showCustomizeModal && (
-        <CustomizeModal onClose={() => setShowCustomizeModal(false)} />
-      )}
-      
-      {showRecipeModal && selectedRecipe && (
-        <RecipeModal 
-          recipe={selectedRecipe} 
-          onClose={() => setShowRecipeModal(false)}
-          user={user}
+        <CustomizeModal 
+          isOpen={showCustomizeModal}
+          onClose={() => setShowCustomizeModal(false)}
+          onGenerateRecipe={() => {}}
         />
       )}
-    </div>
-      </main>
+      {showRecipeModal && selectedRecipe && (
+        <RecipeModal 
+          isOpen={showRecipeModal}
+          onClose={() => setShowRecipeModal(false)}
+          recipes={[selectedRecipe]}
+          isLoading={isGenerating}
+        />
+      )}
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -221,7 +226,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
+          <img
             aria-hidden
             src="/file.svg"
             alt="File icon"
@@ -236,7 +241,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
+          <img
             aria-hidden
             src="/window.svg"
             alt="Window icon"
@@ -251,7 +256,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
+          <img
             aria-hidden
             src="/globe.svg"
             alt="Globe icon"

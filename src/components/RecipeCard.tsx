@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 
 interface Recipe {
   title: string;
@@ -17,6 +18,74 @@ interface RecipeCardProps {
 }
 
 export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
+  const [showSavedPopup, setShowSavedPopup] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [isAlreadySaved, setIsAlreadySaved] = useState(false);
+  const [checkingSavedStatus, setCheckingSavedStatus] = useState(false);
+
+  // Check if recipe is already saved when component mounts
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      if (!onClose) return; // Only check for modal version
+      
+      setCheckingSavedStatus(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const res = await fetch(`/api/recipes/check?userId=${user.id}&title=${encodeURIComponent(recipe.title)}`);
+        const result = await res.json();
+        if (result.success) {
+          setIsAlreadySaved(result.isSaved);
+        }
+      } catch (error) {
+        console.error('Error checking saved status:', error);
+      } finally {
+        setCheckingSavedStatus(false);
+      }
+    };
+
+    checkSavedStatus();
+  }, [recipe.title, onClose]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setError('');
+    // Get user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setError('You must be signed in to save recipes!');
+      setSaving(false);
+      return;
+    }
+    try {
+      const res = await fetch('/api/recipes/saved', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, recipe }),
+      });
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const result = await res.json();
+        if (result.success) {
+          setShowSavedPopup(true);
+          setTimeout(() => setShowSavedPopup(false), 1200);
+          setIsAlreadySaved(true); // Update the saved status
+        } else {
+          setError(result.message || result.error || 'Failed to save recipe.');
+        }
+      } else {
+        const text = await res.text();
+        setError('Server error: ' + text.substring(0, 200));
+        console.error('Non-JSON response:', text);
+      }
+    } catch (e: any) {
+      setError(e.message || 'Failed to save recipe.');
+    }
+    setSaving(false);
+  };
+
   // If onClose is not provided, render as a preview card
   if (!onClose) {
     return (
@@ -108,7 +177,7 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
           <div className="mb-8">
             <div className="border-4 border-pink-200 rounded-2xl p-6" style={{backgroundColor: '#f8fbda'}}>
               <h3 className="text-3xl text-green-700 mb-4 text-center" style={{fontFamily: "'Dancing Script', 'Brush Script MT', cursive", fontWeight: 600}}>
-                🛒 What You'll Need
+                🛒 What You&apos;ll Need
               </h3>
               <ul className="space-y-3">
                 {recipe.ingredients.map((ingredient, index) => (
@@ -127,7 +196,7 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
           <div className="mb-6">
             <div className="border-4 border-pink-200 rounded-2xl p-6" style={{backgroundColor: '#f8fbda'}}>
               <h3 className="text-3xl text-green-700 mb-4 text-center" style={{fontFamily: "'Dancing Script', 'Brush Script MT', cursive", fontWeight: 600}}>
-                👩‍🍳 Let's Cook Together!
+                👩‍🍳 Let&apos;s Cook Together!
               </h3>
               <div className="space-y-6">
                 {recipe.instructions.map((instruction, index) => (
@@ -148,13 +217,44 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
 
           {/* Action Buttons */}
           <div className="flex gap-4 pt-6 border-t-4 border-pink-200">
-            <button className="flex-1 text-gray-800 py-4 px-6 rounded-2xl hover:bg-pink-50 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 border-4 border-pink-200 font-inter" style={{backgroundColor: '#f8fbda'}}>
-              💛 Save to My Cookbook
+            <button
+              className={`flex-1 py-4 px-6 rounded-2xl transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 border-4 border-pink-200 font-inter relative ${
+                isAlreadySaved 
+                  ? 'bg-green-100 text-green-800 cursor-not-allowed' 
+                  : 'text-gray-800 hover:bg-pink-50'
+              }`}
+              style={{backgroundColor: isAlreadySaved ? '#dcfce7' : '#f8fbda'}}
+              onClick={handleSave}
+              disabled={saving || isAlreadySaved || checkingSavedStatus}
+            >
+              {checkingSavedStatus ? (
+                <>🔄 Checking...</>
+              ) : isAlreadySaved ? (
+                <>✅ Saved to Cookbook</>
+              ) : (
+                <>💛 Save to My Cookbook</>
+              )}
+              {saving && <span className="ml-2 animate-spin">⏳</span>}
             </button>
             <button className="flex-1 text-gray-800 py-4 px-6 rounded-2xl hover:bg-pink-50 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 border-4 border-pink-200 font-inter" style={{backgroundColor: '#f8fbda'}}>
               📤 Share with Friends
             </button>
           </div>
+          {error && <div className="text-red-500 text-sm mt-2 text-center">{error}</div>}
+          {showSavedPopup && (
+            <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50">
+              <div className="relative flex items-center justify-center">
+                <div className="animate-burst-pop bg-pink-400 text-white font-bold px-8 py-4 rounded-full shadow-lg text-xl flex items-center gap-2">
+                  <span role="img" aria-label="sparkle">✨</span> Saved!
+                </div>
+                {/* Drops */}
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-pink-300 rounded-full animate-drop1"></span>
+                <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-pink-300 rounded-full animate-drop2"></span>
+                <span className="absolute top-1/2 -left-3 -translate-y-1/2 w-3 h-3 bg-pink-300 rounded-full animate-drop3"></span>
+                <span className="absolute top-1/2 -right-3 -translate-y-1/2 w-3 h-3 bg-pink-300 rounded-full animate-drop4"></span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -202,3 +302,38 @@ function enhanceInstruction(instruction: string, stepNumber: number): string {
   
   return enhanced;
 }
+
+<style jsx global>{`
+        @keyframes burst-pop {
+          0% { transform: scale(0.7); opacity: 0.7; }
+          60% { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(1); opacity: 0; }
+        }
+        .animate-burst-pop {
+          animation: burst-pop 1.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        @keyframes drop1 {
+          0% { opacity: 0; transform: translateY(0) scale(0.5); }
+          40% { opacity: 1; transform: translateY(-18px) scale(1.2); }
+          100% { opacity: 0; transform: translateY(-30px) scale(0.7); }
+        }
+        .animate-drop1 { animation: drop1 1.2s; }
+        @keyframes drop2 {
+          0% { opacity: 0; transform: translateY(0) scale(0.5); }
+          40% { opacity: 1; transform: translateY(18px) scale(1.2); }
+          100% { opacity: 0; transform: translateY(30px) scale(0.7); }
+        }
+        .animate-drop2 { animation: drop2 1.2s; }
+        @keyframes drop3 {
+          0% { opacity: 0; transform: translateX(0) scale(0.5); }
+          40% { opacity: 1; transform: translateX(-18px) scale(1.2); }
+          100% { opacity: 0; transform: translateX(-30px) scale(0.7); }
+        }
+        .animate-drop3 { animation: drop3 1.2s; }
+        @keyframes drop4 {
+          0% { opacity: 0; transform: translateX(0) scale(0.5); }
+          40% { opacity: 1; transform: translateX(18px) scale(1.2); }
+          100% { opacity: 0; transform: translateX(30px) scale(0.7); }
+        }
+        .animate-drop4 { animation: drop4 1.2s; }
+      `}</style>

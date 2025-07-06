@@ -2,17 +2,30 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', { email, password, rememberMe });
+    setError('');
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    // Redirect to home or profile on success
+    router.push('/');
   };
 
   return (
@@ -115,6 +128,9 @@ export default function LoginPage() {
                 </div>
 
                 {/* Login Button */}
+                {error && (
+                  <div className="text-red-500 text-sm font-medium mb-2">{error}</div>
+                )}
                 <button
                   type="submit"
                   className="w-full bg-[#f895a2] text-white py-3 px-6 rounded-full font-medium text-lg hover:bg-[#f7849a] transition-colors shadow-lg"

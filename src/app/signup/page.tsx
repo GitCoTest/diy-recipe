@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -16,6 +18,9 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -54,22 +59,62 @@ export default function SignUpPage() {
     return 'Strong';
   };
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      setError('Passwords do not match!');
       return;
     }
     
     if (!formData.agreeToTerms) {
-      alert('Please agree to the terms and conditions');
+      setError('Please agree to the terms and conditions');
       return;
     }
 
-    // Handle sign up logic here
-    console.log('Sign up attempt:', formData);
+    if (passwordStrength < 50) {
+      setError('Please choose a stronger password');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // Sign up with Supabase
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            full_name: `${formData.firstName} ${formData.lastName}`,
+            subscribe_newsletter: formData.subscribeNewsletter
+          }
+        }
+      });
+
+      if (signUpError) {
+        throw signUpError;
+      }
+
+      if (data.user) {
+        // Show success message
+        alert('Account created successfully! Please check your email to verify your account.');
+        
+        // Redirect to login page
+        router.push('/login?message=Account created successfully. Please verify your email.');
+      }
+
+    } catch (error: unknown) {
+      console.error('Sign up error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create account. Please try again.';
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -125,6 +170,13 @@ export default function SignUpPage() {
             {/* Right Side - Sign Up Form */}
             <div className="order-1 lg:order-2">
               <form onSubmit={handleSignUp} className="space-y-4">
+                {/* Error Message */}
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
+                
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -294,10 +346,17 @@ export default function SignUpPage() {
                 {/* Sign Up Button */}
                 <button
                   type="submit"
-                  className="w-full bg-[#f895a2] text-white py-3 px-6 rounded-full font-medium text-lg hover:bg-[#f7849a] transition-colors shadow-lg"
-                  disabled={!formData.agreeToTerms || formData.password !== formData.confirmPassword}
+                  className="w-full bg-[#f895a2] text-white py-3 px-6 rounded-full font-medium text-lg hover:bg-[#f7849a] transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!formData.agreeToTerms || formData.password !== formData.confirmPassword || isLoading}
                 >
-                  🎉 Create Account
+                  {isLoading ? (
+                    <>
+                      <span className="inline-block animate-spin mr-2">⏳</span>
+                      Creating Account...
+                    </>
+                  ) : (
+                    '🎉 Create Account'
+                  )}
                 </button>
               </form>
 

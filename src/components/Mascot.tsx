@@ -15,19 +15,23 @@ export default function Mascot({ message = "Hi there! I'm Chef Chickpea! 🌟 Te
     setCurrentMessage(message);
   }, [message]);
 
-  const thinkingMessages = [
-    "Hmm, let me think... 🤔",
-    "Cooking up something special... 👨‍🍳",
-    "Almost there! ✨",
-    "This is going to be delicious! 😋"
-  ];
-
   useEffect(() => {
+    const thinkingMessages = [
+      "Hmm, let me think... 🤔",
+      "Cooking up something special... 👨‍🍳",
+      "Almost ready! 🍲",
+      "Just a pinch of inspiration... ✨",
+      "Mixing up your recipe... 🥄",
+      "Adding a dash of creativity... 🧂",
+      "Tasting for perfection... 😋",
+      "Plating your dish... 🍽️",
+    ];
     if (isThinking) {
       let index = 0;
+      setCurrentMessage(thinkingMessages[index]);
       const interval = setInterval(() => {
-        setCurrentMessage(thinkingMessages[index]);
         index = (index + 1) % thinkingMessages.length;
+        setCurrentMessage(thinkingMessages[index]);
       }, 1500);
       return () => clearInterval(interval);
     }

@@ -92,8 +92,9 @@ const generateRecipes = async (params: RecipeRequest): Promise<Recipe[]> => {
       title: dietary === 'Vegetarian' ? '🌱 Veggie Delight (Egg-Free!)' : 
              dietary === 'Vegan' ? '🌿 Plant-Based Bowl' : 
              dietary === 'Gluten-Free' ? '🌾 Gluten-Free Special' :
+             dietary === 'Keto' ? '🥑 Keto-Friendly Dish' :
              `${mealType || 'Special'} Recipe`,
-      image: mealType === 'Breakfast' ? '🥞' : mealType === 'Lunch' ? '🥗' : mealType === 'Dinner' ? '🍽️' : '🍴',
+      image: mealType === 'Breakfast' ? '🥞' : mealType === 'Lunch' ? '🥗' : mealType === 'Dinner' ? '🍽️' : mealType === 'Desserts' ? '�' : '�🍴',
       description: `A delicious ${dietary ? dietary.toLowerCase() + ' ' : ''}recipe perfect for ${mealType?.toLowerCase() || 'any time'}. ${dietary === 'Vegetarian' ? 'Completely egg-free and meat-free!' : ''}`,
       cookTime: '25 mins',
       difficulty: 'Easy',
@@ -141,6 +142,89 @@ const generateRecipes = async (params: RecipeRequest): Promise<Recipe[]> => {
         'Cook for 10-12 minutes, stirring occasionally',
         'Add seasonings and cook for 2-3 more minutes',
         'Garnish if desired and serve immediately'
+      ]
+    },
+    {
+      id: 3,
+      title: `Hearty ${dietary || ''} ${mealType || 'Comfort'} Bowl`.trim(),
+      image: mealType === 'Desserts' ? '🍮' : '🍲',
+      description: `A satisfying and hearty ${dietary ? dietary.toLowerCase() + ' ' : ''}meal that will keep you full`,
+      cookTime: '35 mins',
+      difficulty: 'Medium',
+      servings: 6,
+      ingredients: [
+        ...(filteredBaseIngredients.length > 1 ? filteredBaseIngredients.slice(0, 2).map(ing => `1.5 cups ${ing}`) : [`1.5 cups ${getDietaryAppropriateFlour()}`, 'Rice or quinoa']),
+        ...(filteredMainIngredients.length > 2 ? filteredMainIngredients.slice(0, 3).map(ing => `1 cup ${ing}`) : ['Mixed vegetables', 'Protein of choice', 'Leafy greens']),
+        dietary === 'Keto' ? 'Extra virgin olive oil' : getDietaryAppropriateMilk(),
+        'Herbs and spices blend',
+        dietary === 'Vegan' ? 'Coconut milk' : dietary === 'Vegetarian' ? 'Vegetable broth' : 'Broth',
+        'Fresh herbs for garnish'
+      ],
+      instructions: [
+        'Start by preparing all vegetables and ingredients',
+        'Heat oil in a large pot over medium heat',
+        'Add base ingredients and sauté for 5 minutes',
+        'Add main ingredients in order of cooking time needed',
+        'Pour in liquid ingredients and bring to a simmer',
+        'Cover and cook for 20-25 minutes until tender',
+        'Season to taste and adjust consistency if needed',
+        'Garnish with fresh herbs and serve warm'
+      ]
+    },
+    {
+      id: 4,
+      title: `Creative ${dietary || ''} ${mealType || 'Fusion'} Dish`.trim(),
+      image: mealType === 'Desserts' ? '🧁' : '🎨',
+      description: `An innovative ${dietary ? dietary.toLowerCase() + ' ' : ''}recipe with unique flavor combinations`,
+      cookTime: '20 mins',
+      difficulty: 'Medium',
+      servings: 3,
+      ingredients: [
+        ...(filteredMainIngredients.length > 0 ? filteredMainIngredients.slice(-2).map(ing => `2 cups ${ing}`) : ['Seasonal vegetables']),
+        ...(filteredBaseIngredients.length > 0 ? filteredBaseIngredients.slice(-1).map(ing => `1 cup ${ing}`) : [`1 cup ${getDietaryAppropriateFlour()}`]),
+        dietary === 'Keto' ? 'Avocado oil' : 'Coconut oil',
+        dietary === 'Gluten-Free' ? 'Gluten-free tamari' : 'Soy sauce',
+        'Ginger and garlic',
+        'Lime juice and zest',
+        'Sesame seeds for topping'
+      ],
+      instructions: [
+        'Prepare ingredients with creative cuts and presentations',
+        'Heat oil in a wok or large skillet',
+        'Add aromatics (ginger, garlic) and stir-fry for 30 seconds',
+        'Add main ingredients and cook with high heat for 3-4 minutes',
+        'Add base ingredients and toss everything together',
+        'Season with sauce, lime juice, and spices',
+        'Cook for another 2-3 minutes until perfectly tender',
+        'Garnish with sesame seeds and serve immediately'
+      ]
+    },
+    {
+      id: 5,
+      title: `Simple ${dietary || ''} ${mealType || 'Classic'} Favorite`.trim(),
+      image: mealType === 'Desserts' ? '🍪' : '❤️',
+      description: `A simple yet delicious ${dietary ? dietary.toLowerCase() + ' ' : ''}version of a beloved classic`,
+      cookTime: '30 mins',
+      difficulty: 'Easy',
+      servings: 4,
+      ingredients: [
+        ...(filteredBaseIngredients.length > 0 ? filteredBaseIngredients.slice(0, 1).map(ing => `2 cups ${ing}`) : [`2 cups ${getDietaryAppropriateFlour()}`]),
+        ...(filteredMainIngredients.length > 1 ? filteredMainIngredients.slice(1, 3).map(ing => `1.5 cups ${ing}`) : ['Your favorite vegetables']),
+        getDietaryAppropriateProtein(),
+        dietary === 'Keto' ? 'MCT oil or ghee' : getDietaryAppropriateMilk(),
+        'Traditional spice blend',
+        dietary === 'Vegan' ? 'Nutritional yeast' : dietary === 'Vegetarian' ? 'Cheese (optional)' : 'Preferred seasonings',
+        'Fresh parsley or cilantro'
+      ],
+      instructions: [
+        'Preheat your cooking vessel and gather ingredients',
+        'Begin with base ingredients and cook until golden',
+        'Add main ingredients gradually, stirring gently',
+        'Pour in liquid ingredients slowly while mixing',
+        'Season with spices and let flavors meld for 15 minutes',
+        'Adjust consistency and seasoning as desired',
+        'Finish with fresh herbs',
+        'Let rest for 5 minutes before serving'
       ]
     }
   ];
