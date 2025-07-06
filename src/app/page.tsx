@@ -16,6 +16,15 @@ interface Recipe {
   instructions: string[];
   prepTime?: string;
   difficulty?: string;
+  cookTime?: string;
+  description?: string;
+  servings?: number;
+  image?: string;
+  totalTime?: string;
+  cuisine?: string;
+  tags?: string[];
+  rating?: number;
+  reviews?: number;
 }
 
 export default function Home() {

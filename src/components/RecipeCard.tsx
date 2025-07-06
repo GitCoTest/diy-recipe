@@ -10,6 +10,12 @@ interface Recipe {
   difficulty?: string;
   description?: string;
   servings?: number;
+  image?: string;
+  totalTime?: string;
+  cuisine?: string;
+  tags?: string[];
+  rating?: number;
+  reviews?: number;
 }
 
 interface RecipeCardProps {
@@ -90,29 +96,63 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
   // If onClose is not provided, render as a preview card
   if (!onClose) {
     return (
-      <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-200 rounded-3xl shadow-xl p-6 hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
-        <div className="text-center">
-          <div className="text-4xl mb-3">🍽️</div>
-          <h3 className="text-xl font-pacifico text-yellow-700 mb-2">{recipe.title}</h3>
-          {recipe.description && (
-            <p className="text-yellow-600 text-sm mb-3 italic line-clamp-2">{recipe.description}</p>
-          )}
-          
-          <div className="flex justify-center gap-2 mb-4">
-            {recipe.cookTime && (
-              <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
-                ⏱️ {recipe.cookTime}
-              </span>
-            )}
-            {recipe.difficulty && (
-              <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
-                ⭐ {recipe.difficulty}
-              </span>
+      <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-200 rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
+        {/* Recipe Image */}
+        {recipe.image && (
+          <div className="relative h-48 overflow-hidden">
+            <img 
+              src={recipe.image} 
+              alt={recipe.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            {/* Rating overlay */}
+            {recipe.rating && (
+              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
+                <span className="text-yellow-500 text-sm">⭐</span>
+                <span className="text-xs font-bold text-gray-700">{recipe.rating.toFixed(1)}</span>
+              </div>
             )}
           </div>
-          
-          <div className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold inline-block border border-yellow-300">
-            Click to view full recipe! 👀
+        )}
+        
+        <div className="p-6">
+          <div className="text-center">
+            {!recipe.image && <div className="text-4xl mb-3">🍽️</div>}
+            <h3 className="text-xl font-pacifico text-yellow-700 mb-2">{recipe.title}</h3>
+            {recipe.description && (
+              <p className="text-yellow-600 text-sm mb-3 italic line-clamp-2">{recipe.description}</p>
+            )}
+            
+            {/* Trust indicators */}
+            <div className="flex justify-center gap-2 mb-3">
+              {recipe.cookTime && (
+                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
+                  ⏱️ {recipe.cookTime}
+                </span>
+              )}
+              {recipe.difficulty && (
+                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
+                  📊 {recipe.difficulty}
+                </span>
+              )}
+              {recipe.cuisine && (
+                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
+                  🌍 {recipe.cuisine}
+                </span>
+              )}
+            </div>
+            
+            {/* Reviews indicator */}
+            {recipe.reviews && (
+              <div className="text-xs text-gray-500 mb-3">
+                {recipe.reviews} reviews • Verified Recipe
+              </div>
+            )}
+            
+            <div className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold inline-block border border-yellow-300">
+              Click to view full recipe! 👀
+            </div>
           </div>
         </div>
       </div>
@@ -136,8 +176,58 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
           </button>
           
           <div className="text-center">
-            <div className="text-4xl mb-2">🍽️</div>
+            {/* Recipe Image */}
+            {recipe.image && (
+              <div className="relative mb-4">
+                <img 
+                  src={recipe.image} 
+                  alt={recipe.title}
+                  className="w-full h-48 md:h-64 object-cover rounded-2xl shadow-lg"
+                  loading="lazy"
+                />
+                {/* Trust indicators overlay */}
+                <div className="absolute top-3 right-3 flex gap-2">
+                  {recipe.rating && (
+                    <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+                      <span className="text-yellow-500">⭐</span>
+                      <span className="text-sm font-bold text-gray-700">{recipe.rating.toFixed(1)}</span>
+                    </div>
+                  )}
+                  {recipe.reviews && (
+                    <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
+                      <span className="text-sm font-bold text-gray-700">{recipe.reviews} reviews</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {!recipe.image && <div className="text-4xl mb-2">🍽️</div>}
             <h2 className="text-4xl font-nunito font-black mb-2 text-green-800 uppercase tracking-wider">{recipe.title}</h2>
+            
+            {/* Professional metadata */}
+            <div className="flex justify-center gap-3 mb-3 flex-wrap">
+              {recipe.cuisine && (
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold">
+                  🌍 {recipe.cuisine}
+                </span>
+              )}
+              {recipe.difficulty && (
+                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">
+                  📊 {recipe.difficulty}
+                </span>
+              )}
+              {recipe.cookTime && (
+                <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-bold">
+                  ⏱️ {recipe.cookTime}
+                </span>
+              )}
+              {recipe.servings && (
+                <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-bold">
+                  👥 Serves {recipe.servings}
+                </span>
+              )}
+            </div>
             {recipe.description && (
               <p className="text-gray-600 text-lg italic font-inter">{recipe.description}</p>
             )}
