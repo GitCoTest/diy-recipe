@@ -74,3 +74,37 @@ body {
   box-shadow: 0 8px 32px 0 rgba(249,168,212,0.18), 0 2px 8px 0 rgba(0,0,0,0.10);
   border-color: #ec4899;
 }
+
+/* Recipe Card Saved Animation */
+@keyframes burst-pop {
+  0% { transform: scale(0.7); opacity: 0.7; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+.animate-burst-pop {
+  animation: burst-pop 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes drop1 {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  40% { opacity: 1; transform: translateY(-18px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.7); }
+}
+.animate-drop1 { animation: drop1 1.2s; }
+@keyframes drop2 {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  40% { opacity: 1; transform: translateY(18px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(30px) scale(0.7); }
+}
+.animate-drop2 { animation: drop2 1.2s; }
+@keyframes drop3 {
+  0% { opacity: 0; transform: translateX(0) scale(0.5); }
+  40% { opacity: 1; transform: translateX(-18px) scale(1.2); }
+  100% { opacity: 0; transform: translateX(-30px) scale(0.7); }
+}
+.animate-drop3 { animation: drop3 1.2s; }
+@keyframes drop4 {
+  0% { opacity: 0; transform: translateX(0) scale(0.5); }
+  40% { opacity: 1; transform: translateX(18px) scale(1.2); }
+  100% { opacity: 0; transform: translateX(-30px) scale(0.7); }
+}
+.animate-drop4 { animation: drop4 1.2s; }

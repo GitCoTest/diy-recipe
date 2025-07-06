@@ -153,38 +153,38 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-yellow-50">
-      {/* Floating, rounded header navigation and settings button */}
-      <div className="w-full flex justify-center items-start pt-4 pb-2 z-40 relative">
-        <div className="flex flex-row gap-4 w-auto">
-          <nav className="floating-zoom flex flex-row gap-6 md:gap-10 px-6 py-2 bg-white/90 backdrop-blur border border-pink-200 shadow-xl rounded-full items-center text-base md:text-lg font-bold text-gray-800">
-            <Link href="/" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
-              <span className="text-xl md:text-2xl">🏠</span>
+      {/* Floating, rounded header navigation and settings button - responsive */}
+      <div className="w-full flex justify-center items-start pt-2 sm:pt-4 pb-2 z-40 relative">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-auto px-2 sm:px-0">
+          <nav className="floating-zoom flex flex-row gap-3 sm:gap-6 md:gap-10 px-3 sm:px-6 py-2 bg-white/90 backdrop-blur border border-pink-200 shadow-xl rounded-full items-center text-sm sm:text-base md:text-lg font-bold text-gray-800 overflow-x-auto">
+            <Link href="/" className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
+              <span className="text-base sm:text-xl md:text-2xl">🏠</span>
               <span className="tracking-wide">Home</span>
             </Link>
-            <a href="#discover" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
-              <span className="text-xl md:text-2xl">🔎</span>
-              <span className="tracking-wide">Discover</span>
+            <a href="#discover" className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
+              <span className="text-base sm:text-xl md:text-2xl">🔎</span>
+              <span className="tracking-wide hidden sm:inline">Discover</span>
             </a>
-            <button type="button" onClick={surpriseMe} className="flex items-center gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer">
-              <span className="text-xl md:text-2xl">💡</span>
-              <span className="tracking-wide">Surprise Me!</span>
+            <button type="button" onClick={surpriseMe} className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer whitespace-nowrap">
+              <span className="text-base sm:text-xl md:text-2xl">💡</span>
+              <span className="tracking-wide">Surprise<span className="hidden sm:inline"> Me!</span></span>
             </button>
-            <button onClick={() => window.location.href = '/saved-recipes'} className="flex items-center gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer">
-              <span className="text-xl md:text-2xl">📖</span>
+            <button onClick={() => window.location.href = '/saved-recipes'} className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer whitespace-nowrap">
+              <span className="text-base sm:text-xl md:text-2xl">📖</span>
               <span className="tracking-wide">Saved</span>
             </button>
-            <a href="#grocery" className="flex items-center gap-2 hover:text-pink-600 transition-colors">
-              <span className="text-xl md:text-2xl">🛒</span>
-              <span className="tracking-wide">Grocery</span>
+            <a href="#grocery" className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
+              <span className="text-base sm:text-xl md:text-2xl">🛒</span>
+              <span className="tracking-wide hidden sm:inline">Grocery</span>
             </a>
           </nav>
-          {/* Floating Settings Button */}
-          <div className="relative flex items-center">
+          {/* Floating Settings Button - responsive */}
+          <div className="relative flex items-center justify-center sm:justify-start">
             <button
               onClick={() => setSettingsOpen(!settingsOpen)}
-              className="floating-zoom flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-200 ml-2"
+              className="floating-zoom flex items-center gap-2 bg-white rounded-full px-3 sm:px-4 py-2 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
             >
-              <span className="text-lg">⚙️</span>
+              <span className="text-base sm:text-lg">⚙️</span>
               <span className="text-gray-700 font-medium">Settings</span>
               <span className={`transform transition-transform ${settingsOpen ? 'rotate-180' : ''}`}>
                 ▼
@@ -224,18 +224,18 @@ export default function Home() {
         </div>
       </div>
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         {/* Settings Dropdown */}
         
 
-        {/* Heading Image with Simple Sparkle Animation */}
+        {/* Heading Image with Simple Sparkle Animation - responsive */}
         <div className="text-center mt-0 mb-0 relative">
           <div className="relative inline-block">
             <Image 
               src="/customize-your-meal-heading.png" 
               alt="Customize Your Meal" 
-              className="mx-auto max-w-full h-auto rounded-2xl transition-transform duration-200"
-              style={{ maxHeight: '200px' }}
+              className="mx-auto max-w-full h-auto rounded-xl sm:rounded-2xl transition-transform duration-200"
+              style={{ maxHeight: '120px' }}
               width={600}
               height={200}
             />
@@ -255,19 +255,20 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Ingredient Selection and Preferences */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 mt-8">
+        {/* Ingredient Selection and Preferences - responsive */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 mt-6 sm:mt-8">
           <IngredientSelector onIngredientsChange={handleIngredientsChange} />
           <Preferences onPreferencesChange={handlePreferencesChange} />
         </div>
 
-        {/* Search and Further Customize Buttons */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
+        {/* Search and Further Customize Buttons - responsive */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-8 sm:mb-12">
           <button
             onClick={generateRecipes}
             disabled={isGenerating}
             className={`
-              px-8 py-4 rounded-full text-white font-bold text-lg shadow-lg
+              w-full sm:w-auto
+              px-6 sm:px-8 py-3 sm:py-4 rounded-full text-white font-bold text-base sm:text-lg shadow-lg
               transform transition-all duration-200
               ${isGenerating 
                 ? 'bg-gray-400 cursor-not-allowed' 
@@ -276,9 +277,10 @@ export default function Home() {
             `}
           >
             {isGenerating ? (
-              <span className="flex items-center gap-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Searching Recipes...
+              <span className="flex items-center justify-center gap-2">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span className="hidden sm:inline">Searching Recipes...</span>
+                <span className="sm:hidden">Searching...</span>
               </span>
             ) : (
               'Search Recipes'
@@ -286,20 +288,21 @@ export default function Home() {
           </button>
           <button
             type="button"
-            className="px-8 py-4 rounded-full border-2 border-pink-400 text-pink-600 font-bold text-lg bg-white shadow-md hover:bg-pink-50 transition-all duration-200"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-full border-2 border-pink-400 text-pink-600 font-bold text-base sm:text-lg bg-white shadow-md hover:bg-pink-50 transition-all duration-200"
             onClick={() => alert('Further customization coming soon!')}
           >
-            Further Customize
+            <span className="hidden sm:inline">Further Customize</span>
+            <span className="sm:hidden">Customize</span>
           </button>
         </div>
 
         {/* Generated Recipes */}
         {generatedRecipes.length > 0 && (
-          <div className="mb-12" data-recipes-section>
-            <h2 className="text-3xl font-bold text-center text-purple-800 mb-8">
+          <div className="mb-8 sm:mb-12" data-recipes-section>
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-purple-800 mb-6 sm:mb-8">
               Your Personalized Recipes ✨
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {generatedRecipes.map((recipe, index) => (
                 <div key={index} onClick={() => openRecipeModal(recipe)} className="cursor-pointer">
                   <RecipeCard recipe={recipe} />
