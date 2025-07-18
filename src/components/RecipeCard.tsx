@@ -99,7 +99,12 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     const titleLower = title.toLowerCase();
     const ingredientsText = ingredients.join(' ').toLowerCase();
     
+    console.log('🖼️ Getting image for recipe:', title);
+    console.log('🥄 Ingredients:', ingredientsText);
+    
     // Recipe-specific image mapping - prioritize specific dishes first
+    
+    // Baked goods and desserts (most specific first)
     if (titleLower.includes('protein') && (titleLower.includes('shake') || titleLower.includes('smoothie'))) {
       return 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=800&h=600&fit=crop';
     }
@@ -108,6 +113,9 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     }
     if (titleLower.includes('mug cake') || (titleLower.includes('microwave') && titleLower.includes('cake'))) {
       return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop';
+    }
+    if (titleLower.includes('chocolate chip') && titleLower.includes('cookie')) {
+      return 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&h=600&fit=crop';
     }
     if (titleLower.includes('pancake') || titleLower.includes('hotcake')) {
       return 'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&h=600&fit=crop';
@@ -122,21 +130,38 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
       return 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=800&h=600&fit=crop';
     }
     
-    // Pasta dishes - be more specific
+    // Pasta dishes (very specific matching)
+    if (titleLower.includes('spaghetti') && (ingredientsText.includes('tomato') || titleLower.includes('marinara') || titleLower.includes('sauce'))) {
+      return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop';
+    }
     if (titleLower.includes('pasta') && (ingredientsText.includes('tomato') || titleLower.includes('marinara'))) {
       return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop';
     }
     if (titleLower.includes('pasta') && (titleLower.includes('aglio') || titleLower.includes('garlic'))) {
       return 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800&h=600&fit=crop';
     }
-    if (titleLower.includes('pasta') && titleLower.includes('cream')) {
+    if (titleLower.includes('pasta') && (titleLower.includes('cream') || ingredientsText.includes('cream'))) {
       return 'https://images.unsplash.com/photo-1572441713132-51c75654db73?w=800&h=600&fit=crop';
     }
-    if (titleLower.includes('spaghetti') || titleLower.includes('linguine')) {
+    if (titleLower.includes('spaghetti') || titleLower.includes('linguine') || titleLower.includes('fettuccine')) {
       return 'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=800&h=600&fit=crop';
     }
-    if (titleLower.includes('mac') && titleLower.includes('cheese')) {
+    if ((titleLower.includes('mac') && titleLower.includes('cheese')) || titleLower.includes('macaroni')) {
       return 'https://images.unsplash.com/photo-1471282334269-facbaf40b3b7?w=800&h=600&fit=crop';
+    }
+    if (titleLower.includes('pasta') || titleLower.includes('penne') || titleLower.includes('rigatoni')) {
+      return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop';
+    }
+    
+    // Rice dishes
+    if (titleLower.includes('fried rice') || (titleLower.includes('rice') && (ingredientsText.includes('soy') || ingredientsText.includes('egg')))) {
+      return 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop';
+    }
+    if (titleLower.includes('risotto')) {
+      return 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&h=600&fit=crop';
+    }
+    if (titleLower.includes('rice') && (titleLower.includes('bowl') || titleLower.includes('pilaf'))) {
+      return 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop';
     }
     
     // Soups and liquid dishes
@@ -220,18 +245,36 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
       return 'https://images.unsplash.com/photo-1497636577773-f1231844b336?w=800&h=600&fit=crop';
     }
     
-    // Default fallback based on meal type
+    // Default fallback based on meal type or ingredients
     if (titleLower.includes('breakfast')) {
+      console.log('🖼️ Selected breakfast image');
       return 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&h=600&fit=crop';
     }
-    if (titleLower.includes('dessert')) {
+    if (titleLower.includes('dessert') || titleLower.includes('sweet')) {
+      console.log('🖼️ Selected dessert image');
       return 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop';
     }
     if (titleLower.includes('snack')) {
+      console.log('🖼️ Selected snack image');
       return 'https://images.unsplash.com/photo-1559054663-e433dc16b6e9?w=800&h=600&fit=crop';
     }
     
+    // Check for specific ingredients in fallback
+    if (ingredientsText.includes('chicken')) {
+      console.log('🖼️ Selected chicken image based on ingredients');
+      return 'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop';
+    }
+    if (ingredientsText.includes('beef') || ingredientsText.includes('steak')) {
+      console.log('🖼️ Selected beef image based on ingredients');
+      return 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop';
+    }
+    if (ingredientsText.includes('fish') || ingredientsText.includes('salmon')) {
+      console.log('🖼️ Selected fish image based on ingredients');
+      return 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=800&h=600&fit=crop';
+    }
+    
     // Generic food image as final fallback
+    console.log('🖼️ Using generic food image fallback for:', title);
     return 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&h=600&fit=crop';
   };
 

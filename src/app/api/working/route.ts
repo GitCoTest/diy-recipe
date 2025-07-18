@@ -312,7 +312,7 @@ function enhanceRecipe(recipe: Recipe, index: number): Recipe {
   return {
     ...recipe,
     id: Date.now() + index,
-    image: `https://picsum.photos/400/300?random=${Date.now() + index}`,
+    // Remove random image - let client-side getRecipeImageUrl handle image selection based on recipe content
     prepTime: recipe.prepTime || "10 mins",
     totalTime: recipe.totalTime || "30 mins",
     cuisine: recipe.cuisine || "International",
