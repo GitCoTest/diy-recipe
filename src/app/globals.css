@@ -1,0 +1,340 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+:root {
+  --background: #f7f3f0;
+  --foreground: #8b4513;
+  --elegant-cream: #faf8f5;
+  --warm-brown: #8b4513;
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --amber-800: #92400e;
+  --amber-900: #78350f;
+}
+
+/* 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+*/
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Simple tiny sparkle animation */
+.tiny-sparkle {
+  position: absolute;
+  font-size: 1rem;
+  color: #fbbf24;
+  opacity: 0.7;
+  pointer-events: none;
+  animation: tiny-twinkle 2.2s infinite;
+  filter: drop-shadow(0 0 2px #fff6);
+}
+.ts-1 { top: 18%; left: 22%; animation-delay: 0s; }
+.ts-2 { top: 12%; right: 18%; animation-delay: 0.7s; }
+.ts-3 { bottom: 20%; left: 30%; animation-delay: 1.1s; }
+.ts-4 { top: 60%; right: 25%; animation-delay: 1.5s; }
+.ts-5 { bottom: 15%; right: 20%; animation-delay: 0.4s; }
+.ts-6 { top: 8%; left: 45%; animation-delay: 1.8s; }
+.ts-7 { top: 40%; right: 10%; animation-delay: 0.9s; }
+.ts-8 { bottom: 10%; left: 60%; animation-delay: 1.3s; }
+.ts-9 { top: 30%; left: 10%; animation-delay: 0.2s; }
+.ts-10 { bottom: 5%; right: 40%; animation-delay: 1.6s; }
+
+@keyframes tiny-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(20deg); }
+}
+
+/* Floating nav and settings zoom effect */
+.floating-zoom {
+  transition: transform 0.18s cubic-bezier(.4,1.6,.6,1), box-shadow 0.18s;
+}
+.floating-zoom:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 32px 0 rgba(249,168,212,0.18), 0 2px 8px 0 rgba(0,0,0,0.10);
+}
+
+.heading-img-bold:hover {
+  transform: scale(1.04) rotate(-1deg);
+  box-shadow: 0 8px 32px 0 rgba(249,168,212,0.18), 0 2px 8px 0 rgba(0,0,0,0.10);
+  border-color: #ec4899;
+}
+
+/* Recipe Card Saved Animation */
+@keyframes burst-pop {
+  0% { transform: scale(0.7); opacity: 0.7; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+.animate-burst-pop {
+  animation: burst-pop 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes drop1 {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  40% { opacity: 1; transform: translateY(-18px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.7); }
+}
+.animate-drop1 { animation: drop1 1.2s; }
+@keyframes drop2 {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  40% { opacity: 1; transform: translateY(18px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(30px) scale(0.7); }
+}
+.animate-drop2 { animation: drop2 1.2s; }
+@keyframes drop3 {
+  0% { opacity: 0; transform: translateX(0) scale(0.5); }
+  40% { opacity: 1; transform: translateX(-18px) scale(1.2); }
+  100% { opacity: 0; transform: translateX(-30px) scale(0.7); }
+}
+.animate-drop3 { animation: drop3 1.2s; }
+@keyframes drop4 {
+  0% { opacity: 0; transform: translateX(0) scale(0.5); }
+  40% { opacity: 1; transform: translateX(18px) scale(1.2); }
+  100% { opacity: 0; transform: translateX(-30px) scale(0.7); }
+}
+.animate-drop4 { animation: drop4 1.2s; }
+
+/* Mascot Animation */
+@keyframes bounce-in {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.3) translateY(20px); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.05) translateY(-10px); 
+  }
+  70% { 
+    transform: scale(0.95) translateY(5px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
+}
+.animate-bounce-in { 
+  animation: bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+}
+
+/* Cloud-shaped Speech Bubble */
+.cloud-bubble {
+  position: relative;
+  width: 380px;
+  height: 70px;
+  background: #fce7f3;
+  border-radius: 45px;
+  margin-top: 20px;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Cloud content with proper z-index */
+.cloud-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* Top cloud puffs - evenly distributed and smaller */
+.cloud-puff-top-1 {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: -25px;
+  left: 15px;
+}
+
+.cloud-puff-top-2 {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: -28px;
+  left: 60px;
+}
+
+.cloud-puff-top-3 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: -30px;
+  left: 115px;
+}
+
+.cloud-puff-top-4 {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: -28px;
+  left: 170px;
+}
+
+.cloud-puff-top-5 {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: -25px;
+  left: 220px;
+}
+
+.cloud-puff-top-6 {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: -23px;
+  left: 270px;
+}
+
+/* Bottom cloud puffs - evenly distributed and smaller */
+.cloud-puff-bottom-1 {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fce7f3;
+  border-radius: 50%;
+  bottom: -20px;
+  left: 30px;
+}
+
+.cloud-puff-bottom-2 {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  background: #fce7f3;
+  border-radius: 50%;
+  bottom: -23px;
+  left: 85px;
+}
+
+.cloud-puff-bottom-3 {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #fce7f3;
+  border-radius: 50%;
+  bottom: -25px;
+  left: 140px;
+}
+
+.cloud-puff-bottom-4 {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  background: #fce7f3;
+  border-radius: 50%;
+  bottom: -23px;
+  left: 195px;
+}
+
+.cloud-puff-bottom-5 {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fce7f3;
+  border-radius: 50%;
+  bottom: -20px;
+  left: 250px;
+}
+
+/* Side cloud puffs */
+.cloud-puff-left {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: 12px;
+  left: -25px;
+}
+
+.cloud-puff-right {
+  position: absolute;
+  width: 65px;
+  height: 65px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: 6px;
+  right: -32px;
+}
+
+/* Small bump on the right */
+.cloud-puff-right-small {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fce7f3;
+  border-radius: 50%;
+  top: 30px;
+  right: -20px;
+}
+
+/* Speech bubble tail pointing to mascot - bigger */
+.cloud-tail {
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 18px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-right: 25px solid #fce7f3;
+  z-index: 2;
+}
+
+/* Small pointer towards strawberry - bigger */
+.cloud-tail::after {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: -9px;
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 15px solid #fce7f3;
+  z-index: 3;
+}
+
+/* Remove the individual puff elements since we're using proper elements */
+.cloud-puff {
+  display: none;
+}

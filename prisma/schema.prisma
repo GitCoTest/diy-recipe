@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  savedRecipes     SavedRecipe[]
+  customIngredients CustomIngredient[]
+  recipeHistory    RecipeHistory[]
+}
+
+model SavedRecipe {
+  id           String   @id @default(cuid())
+  userId       String
+  title        String
+  description  String
+  cookTime     String
+  difficulty   String
+  servings     Int
+  image        String?
+  ingredients  String   // JSON string
+  instructions String   // JSON string
+  source       String?
+  mealType     String?
+  dietary      String?
+  favorite     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CustomIngredient {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  category  String
+  validated Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+}
+
+model RecipeHistory {
+  id               String   @id @default(cuid())
+  userId           String?
+  baseIngredients  String   // JSON string
+  mainIngredients  String   // JSON string
+  mealType         String?
+  dietary          String?
+  customizations   String   // JSON string
+  surpriseMode     Boolean  @default(false)
+  recipesGenerated Int
+  source           String   // 'gpt' or 'fallback'
+  success          Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
