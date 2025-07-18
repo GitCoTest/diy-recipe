@@ -37,6 +37,7 @@ export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileDiscoverOpen, setMobileDiscoverOpen] = useState(false);
   const [mobileGroceryOpen, setMobileGroceryOpen] = useState(false);
+  const [mobileSurpriseOpen, setMobileSurpriseOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   
   // Voice functionality states
@@ -74,6 +75,7 @@ export default function Home() {
       if (!target.closest('nav') && !target.closest('.mobile-dropdown')) {
         setMobileDiscoverOpen(false);
         setMobileGroceryOpen(false);
+        setMobileSurpriseOpen(false);
         setSettingsOpen(false);
       }
     };
@@ -419,6 +421,7 @@ export default function Home() {
               onClick={() => {
                 setMobileDiscoverOpen(!mobileDiscoverOpen);
                 setMobileGroceryOpen(false);
+                setMobileSurpriseOpen(false);
                 setSettingsOpen(false);
               }}
               className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
@@ -433,11 +436,25 @@ export default function Home() {
               )}
             </button>
             <button 
-              type="button" 
-              onClick={surpriseMe} 
-              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer"
+              onClick={() => {
+                setMobileSurpriseOpen(!mobileSurpriseOpen);
+                setMobileDiscoverOpen(false);
+                setMobileGroceryOpen(false);
+                setSettingsOpen(false);
+              }}
+              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
             >
               💡
+              {mobileSurpriseOpen && (
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 w-40 z-50">
+                  <button 
+                    onClick={surpriseMe}
+                    className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm w-full text-left"
+                  >
+                    <span>💡</span><span>Surprise Me!</span>
+                  </button>
+                </div>
+              )}
             </button>
             <button 
               onClick={() => window.location.href = '/saved-recipes'} 
@@ -449,6 +466,7 @@ export default function Home() {
               onClick={() => {
                 setMobileGroceryOpen(!mobileGroceryOpen);
                 setMobileDiscoverOpen(false);
+                setMobileSurpriseOpen(false);
                 setSettingsOpen(false);
               }}
               className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
@@ -468,6 +486,7 @@ export default function Home() {
                 setSettingsOpen(!settingsOpen);
                 setMobileDiscoverOpen(false);
                 setMobileGroceryOpen(false);
+                setMobileSurpriseOpen(false);
               }}
               className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
             >
@@ -720,7 +739,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-6 mb-6 sm:mb-8 px-1 sm:px-0">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3 lg:gap-6 mb-6 sm:mb-8 px-1 sm:px-0">
             <IngredientSelector onIngredientsChange={handleIngredientsChange} />
             <Preferences onPreferencesChange={handlePreferencesChange} />
           </div>

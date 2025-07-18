@@ -568,6 +568,32 @@ body {
   }
 }
 
+/* Enhanced mobile grid spacing */
+@media (max-width: 640px) {
+  /* Add better spacing between grid items */
+  .grid.grid-cols-2 > * {
+    margin-bottom: 16px !important;
+  }
+  
+  .grid.grid-cols-2 > *:nth-child(odd) {
+    margin-right: 8px !important;
+  }
+  
+  .grid.grid-cols-2 > *:nth-child(even) {
+    margin-left: 8px !important;
+  }
+  
+  /* Add top spacing for non-first-row items */
+  .grid.grid-cols-2 > *:nth-child(n+3) {
+    margin-top: 8px !important;
+  }
+  
+  /* Ensure proper gap spacing for ingredient containers */
+  .ingredient-selector-mobile {
+    margin: 8px 0 !important;
+  }
+}
+
 /* Remove the individual puff elements since we're using proper elements */
 .cloud-puff {
   display: none;
