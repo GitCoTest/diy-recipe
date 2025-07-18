@@ -400,8 +400,8 @@ export default function Home() {
         {/* Voice Bot - Primary Interface */}
         <div className="mb-6">
           {/* Mascot Section */}
-          <div className="flex justify-center items-center mb-6 relative">
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+          <div className="flex justify-center items-center mb-4 relative">
+            <div className="flex flex-row items-center gap-2 sm:gap-8">
               {/* Mascot Image */}
               <div className={`transition-all duration-800 ease-in-out ${
                 mascotAnimated ? 'transform scale-105' : ''
@@ -409,9 +409,9 @@ export default function Home() {
                 <Image
                   src={`/mascots/${selectedMascot}.png`}
                   alt={getMascotInfo(selectedMascot).name}
-                  width={120}
-                  height={120}
-                  className="drop-shadow-lg hover:scale-110 transition-transform duration-300"
+                  width={80}
+                  height={80}
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-[120px] md:h-[120px] drop-shadow-lg hover:scale-110 transition-transform duration-300"
                   style={{ 
                     filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))',
                     objectFit: 'contain'
@@ -438,21 +438,18 @@ export default function Home() {
                   <div className="cloud-puff-bottom-4"></div>
                   <div className="cloud-puff-bottom-5"></div>
                   <div className="cloud-content">
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className="font-bold text-pink-600 text-base sm:text-lg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                    <div className="text-center">
+                      <span className="font-bold text-pink-600 text-sm sm:text-base md:text-lg block" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                         Hey, I'm Berry!
                       </span>
                     </div>
-                    <p className="text-gray-700 text-xs sm:text-sm leading-relaxed" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-                      Whatcha cooking today? I'm here to help you find the perfect recipe! 🍳
-                    </p>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
             <button
               onClick={startVoiceRecognition}
               disabled={!voiceSupported || isGenerating}
@@ -481,6 +478,17 @@ export default function Home() {
               )}
             </button>
           </div>
+
+          {/* Voice Transcript Display */}
+          {voiceTranscript && (
+            <div className="flex justify-center mb-4">
+              <div className="bg-purple-50 border border-purple-200 rounded-full px-4 py-2 max-w-md">
+                <p className="text-sm text-purple-700 text-center font-medium">
+                  "{voiceTranscript}"
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Example Voice Commands */}
           <div className="text-center">

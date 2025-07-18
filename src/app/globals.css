@@ -159,12 +159,12 @@ body {
 /* Mobile responsive cloud bubble */
 @media (max-width: 640px) {
   .cloud-bubble {
-    width: 280px;
-    height: 60px;
-    margin-top: 15px;
-    margin-left: 10px;
-    padding: 12px 18px;
-    border-radius: 35px;
+    width: 200px;
+    height: 45px;
+    margin-top: 10px;
+    margin-left: 5px;
+    padding: 8px 15px;
+    border-radius: 25px;
   }
 }
 
@@ -172,13 +172,17 @@ body {
 .cloud-content {
   position: relative;
   z-index: 10;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile responsive cloud content */
 @media (max-width: 640px) {
   .cloud-content {
     text-align: center;
-    padding: 0 5px;
+    padding: 0;
   }
 }
 
@@ -246,45 +250,45 @@ body {
 /* Mobile responsive top cloud puffs */
 @media (max-width: 640px) {
   .cloud-puff-top-1 {
-    width: 35px;
-    height: 35px;
-    top: -18px;
-    left: 12px;
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    left: 8px;
   }
   
   .cloud-puff-top-2 {
-    width: 40px;
-    height: 40px;
-    top: -20px;
-    left: 45px;
+    width: 22px;
+    height: 22px;
+    top: -11px;
+    left: 25px;
   }
   
   .cloud-puff-top-3 {
-    width: 45px;
-    height: 45px;
-    top: -23px;
-    left: 85px;
+    width: 25px;
+    height: 25px;
+    top: -13px;
+    left: 45px;
   }
   
   .cloud-puff-top-4 {
-    width: 40px;
-    height: 40px;
-    top: -20px;
-    left: 125px;
+    width: 22px;
+    height: 22px;
+    top: -11px;
+    left: 68px;
   }
   
   .cloud-puff-top-5 {
-    width: 35px;
-    height: 35px;
-    top: -18px;
-    left: 165px;
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    left: 88px;
   }
   
   .cloud-puff-top-6 {
-    width: 30px;
-    height: 30px;
-    top: -15px;
-    left: 200px;
+    width: 18px;
+    height: 18px;
+    top: -9px;
+    left: 108px;
   }
 }
 
@@ -342,38 +346,38 @@ body {
 /* Mobile responsive bottom cloud puffs */
 @media (max-width: 640px) {
   .cloud-puff-bottom-1 {
-    width: 28px;
-    height: 28px;
-    bottom: -14px;
-    left: 22px;
+    width: 16px;
+    height: 16px;
+    bottom: -8px;
+    left: 12px;
   }
   
   .cloud-puff-bottom-2 {
-    width: 32px;
-    height: 32px;
-    bottom: -16px;
-    left: 62px;
+    width: 18px;
+    height: 18px;
+    bottom: -9px;
+    left: 32px;
   }
   
   .cloud-puff-bottom-3 {
-    width: 35px;
-    height: 35px;
-    bottom: -18px;
-    left: 102px;
+    width: 20px;
+    height: 20px;
+    bottom: -10px;
+    left: 55px;
   }
   
   .cloud-puff-bottom-4 {
-    width: 32px;
-    height: 32px;
-    bottom: -16px;
-    left: 142px;
+    width: 18px;
+    height: 18px;
+    bottom: -9px;
+    left: 78px;
   }
   
   .cloud-puff-bottom-5 {
-    width: 28px;
-    height: 28px;
-    bottom: -14px;
-    left: 180px;
+    width: 16px;
+    height: 16px;
+    bottom: -8px;
+    left: 98px;
   }
 }
 
@@ -412,24 +416,24 @@ body {
 /* Mobile responsive side cloud puffs */
 @media (max-width: 640px) {
   .cloud-puff-left {
-    width: 35px;
-    height: 35px;
-    top: 10px;
-    left: -18px;
+    width: 20px;
+    height: 20px;
+    top: 6px;
+    left: -10px;
   }
   
   .cloud-puff-right {
-    width: 45px;
-    height: 45px;
-    top: 5px;
-    right: -23px;
+    width: 25px;
+    height: 25px;
+    top: 3px;
+    right: -13px;
   }
   
   .cloud-puff-right-small {
-    width: 28px;
-    height: 28px;
-    top: 25px;
-    right: -14px;
+    width: 16px;
+    height: 16px;
+    top: 15px;
+    right: -8px;
   }
 }
 
@@ -464,18 +468,18 @@ body {
 /* Mobile responsive speech bubble tail */
 @media (max-width: 640px) {
   .cloud-tail {
-    left: -15px;
-    border-top: 14px solid transparent;
-    border-bottom: 14px solid transparent;
-    border-right: 18px solid #fce7f3;
+    left: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid #fce7f3;
   }
   
   .cloud-tail::after {
-    left: -9px;
-    top: -7px;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-right: 12px solid #fce7f3;
+    left: -6px;
+    top: -4px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 8px solid #fce7f3;
   }
 }
 
