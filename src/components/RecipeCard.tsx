@@ -99,9 +99,6 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     const titleLower = title.toLowerCase();
     const ingredientsText = ingredients.join(' ').toLowerCase();
     
-    console.log('🖼️ Getting image for recipe:', title);
-    console.log('🥄 Ingredients:', ingredientsText);
-    
     // Recipe-specific image mapping - prioritize specific dishes first
     
     // Baked goods and desserts (most specific first)
@@ -247,34 +244,27 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     
     // Default fallback based on meal type or ingredients
     if (titleLower.includes('breakfast')) {
-      console.log('🖼️ Selected breakfast image');
       return 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=800&h=600&fit=crop';
     }
     if (titleLower.includes('dessert') || titleLower.includes('sweet')) {
-      console.log('🖼️ Selected dessert image');
       return 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop';
     }
     if (titleLower.includes('snack')) {
-      console.log('🖼️ Selected snack image');
       return 'https://images.unsplash.com/photo-1559054663-e433dc16b6e9?w=800&h=600&fit=crop';
     }
     
     // Check for specific ingredients in fallback
     if (ingredientsText.includes('chicken')) {
-      console.log('🖼️ Selected chicken image based on ingredients');
       return 'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop';
     }
     if (ingredientsText.includes('beef') || ingredientsText.includes('steak')) {
-      console.log('🖼️ Selected beef image based on ingredients');
       return 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop';
     }
     if (ingredientsText.includes('fish') || ingredientsText.includes('salmon')) {
-      console.log('🖼️ Selected fish image based on ingredients');
       return 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=800&h=600&fit=crop';
     }
     
     // Generic food image as final fallback
-    console.log('🖼️ Using generic food image fallback for:', title);
     return 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&h=600&fit=crop';
   };
 
@@ -445,28 +435,50 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     return (
       <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-200 rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer">
         
-        <div className="p-6">
+        {/* Preview Image */}
+        <div className="relative h-48 bg-gradient-to-br from-amber-100 to-orange-200 overflow-hidden">
+          <img 
+            src={recipe.image || getRecipeImageUrl(recipe.title, recipe.ingredients)} 
+            alt={recipe.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to emoji if image fails to load
+              (e.target as HTMLImageElement).style.display = 'none';
+              const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
+              if (fallback) fallback.style.display = 'flex';
+            }}
+          />
+          <div className="w-full h-full hidden items-center justify-center absolute inset-0 bg-yellow-100">
+            <div className="text-6xl opacity-60">🍽️</div>
+          </div>
+          {/* Recipe title overlay on image */}
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+            <h3 className="text-lg font-bold text-white mb-1" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+              {recipe.title}
+            </h3>
+          </div>
+        </div>
+        
+        <div className="p-4">
           <div className="text-center">
-            <div className="text-4xl mb-3">🍽️</div>
-            <h3 className="text-xl font-pacifico text-yellow-700 mb-2">{recipe.title}</h3>
             {recipe.description && (
               <p className="text-yellow-600 text-sm mb-3 italic line-clamp-2">{recipe.description}</p>
             )}
             
             {/* Trust indicators */}
-            <div className="flex justify-center gap-2 mb-3">
+            <div className="flex justify-center gap-2 mb-3 flex-wrap">
               {recipe.cookTime && (
-                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
+                <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-bold border border-yellow-200">
                   ⏱️ {recipe.cookTime}
                 </span>
               )}
               {recipe.difficulty && (
-                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
+                <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-bold border border-yellow-200">
                   📊 {recipe.difficulty}
                 </span>
               )}
               {recipe.cuisine && (
-                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">
+                <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-bold border border-yellow-200">
                   🌍 {recipe.cuisine}
                 </span>
               )}
