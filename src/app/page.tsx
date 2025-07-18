@@ -401,7 +401,7 @@ export default function Home() {
         <div className="mb-6">
           {/* Mascot Section */}
           <div className="flex justify-center items-center mb-6 relative">
-            <div className="flex items-center gap-8">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
               {/* Mascot Image */}
               <div className={`transition-all duration-800 ease-in-out ${
                 mascotAnimated ? 'transform scale-105' : ''
@@ -439,11 +439,11 @@ export default function Home() {
                   <div className="cloud-puff-bottom-5"></div>
                   <div className="cloud-content">
                     <div className="flex items-center gap-3 mb-1">
-                      <span className="font-bold text-pink-600 text-lg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-                        Hey! I'm {getMascotInfo(selectedMascot).name}!
+                      <span className="font-bold text-pink-600 text-base sm:text-lg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                        Hey, I'm Berry!
                       </span>
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+                    <p className="text-gray-700 text-xs sm:text-sm leading-relaxed" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                       Whatcha cooking today? I'm here to help you find the perfect recipe! 🍳
                     </p>
                   </div>

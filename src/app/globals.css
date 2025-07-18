@@ -156,10 +156,30 @@ body {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
+/* Mobile responsive cloud bubble */
+@media (max-width: 640px) {
+  .cloud-bubble {
+    width: 280px;
+    height: 60px;
+    margin-top: 15px;
+    margin-left: 10px;
+    padding: 12px 18px;
+    border-radius: 35px;
+  }
+}
+
 /* Cloud content with proper z-index */
 .cloud-content {
   position: relative;
   z-index: 10;
+}
+
+/* Mobile responsive cloud content */
+@media (max-width: 640px) {
+  .cloud-content {
+    text-align: center;
+    padding: 0 5px;
+  }
 }
 
 /* Top cloud puffs - evenly distributed and smaller */
@@ -223,6 +243,51 @@ body {
   left: 270px;
 }
 
+/* Mobile responsive top cloud puffs */
+@media (max-width: 640px) {
+  .cloud-puff-top-1 {
+    width: 35px;
+    height: 35px;
+    top: -18px;
+    left: 12px;
+  }
+  
+  .cloud-puff-top-2 {
+    width: 40px;
+    height: 40px;
+    top: -20px;
+    left: 45px;
+  }
+  
+  .cloud-puff-top-3 {
+    width: 45px;
+    height: 45px;
+    top: -23px;
+    left: 85px;
+  }
+  
+  .cloud-puff-top-4 {
+    width: 40px;
+    height: 40px;
+    top: -20px;
+    left: 125px;
+  }
+  
+  .cloud-puff-top-5 {
+    width: 35px;
+    height: 35px;
+    top: -18px;
+    left: 165px;
+  }
+  
+  .cloud-puff-top-6 {
+    width: 30px;
+    height: 30px;
+    top: -15px;
+    left: 200px;
+  }
+}
+
 /* Bottom cloud puffs - evenly distributed and smaller */
 .cloud-puff-bottom-1 {
   position: absolute;
@@ -274,6 +339,44 @@ body {
   left: 250px;
 }
 
+/* Mobile responsive bottom cloud puffs */
+@media (max-width: 640px) {
+  .cloud-puff-bottom-1 {
+    width: 28px;
+    height: 28px;
+    bottom: -14px;
+    left: 22px;
+  }
+  
+  .cloud-puff-bottom-2 {
+    width: 32px;
+    height: 32px;
+    bottom: -16px;
+    left: 62px;
+  }
+  
+  .cloud-puff-bottom-3 {
+    width: 35px;
+    height: 35px;
+    bottom: -18px;
+    left: 102px;
+  }
+  
+  .cloud-puff-bottom-4 {
+    width: 32px;
+    height: 32px;
+    bottom: -16px;
+    left: 142px;
+  }
+  
+  .cloud-puff-bottom-5 {
+    width: 28px;
+    height: 28px;
+    bottom: -14px;
+    left: 180px;
+  }
+}
+
 /* Side cloud puffs */
 .cloud-puff-left {
   position: absolute;
@@ -306,6 +409,30 @@ body {
   right: -20px;
 }
 
+/* Mobile responsive side cloud puffs */
+@media (max-width: 640px) {
+  .cloud-puff-left {
+    width: 35px;
+    height: 35px;
+    top: 10px;
+    left: -18px;
+  }
+  
+  .cloud-puff-right {
+    width: 45px;
+    height: 45px;
+    top: 5px;
+    right: -23px;
+  }
+  
+  .cloud-puff-right-small {
+    width: 28px;
+    height: 28px;
+    top: 25px;
+    right: -14px;
+  }
+}
+
 /* Speech bubble tail pointing to mascot - bigger */
 .cloud-tail {
   position: absolute;
@@ -332,6 +459,24 @@ body {
   border-bottom: 9px solid transparent;
   border-right: 15px solid #fce7f3;
   z-index: 3;
+}
+
+/* Mobile responsive speech bubble tail */
+@media (max-width: 640px) {
+  .cloud-tail {
+    left: -15px;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    border-right: 18px solid #fce7f3;
+  }
+  
+  .cloud-tail::after {
+    left: -9px;
+    top: -7px;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 12px solid #fce7f3;
+  }
 }
 
 /* Remove the individual puff elements since we're using proper elements */

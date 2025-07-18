@@ -21,13 +21,39 @@ interface Recipe {
   servings: number;
 }
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Check if OpenAI is configured
+const apiKey = process.env.OPENAI_API_KEY;
+let openai: OpenAI | null = null;
+
+if (!apiKey) {
+  console.warn('⚠️ OpenAI API key not configured - recipe generation will return mock data');
+} else {
+  // Initialize OpenAI
+  openai = new OpenAI({
+    apiKey: apiKey,
+  });
+}
 
 // OpenAI recipe generation with smart prompting
 const generateRecipesWithOpenAI = async (params: RecipeRequest): Promise<Recipe[]> => {
+  // If OpenAI is not configured, return mock recipes
+  if (!openai) {
+    console.log("⚠️ OpenAI not configured - returning mock recipes");
+    return [
+      {
+        id: 1,
+        title: "Mock Recipe (OpenAI not configured)",
+        image: "🍽️",
+        description: "This is a placeholder recipe since OpenAI API is not configured.",
+        cookTime: "15 min",
+        difficulty: "Easy",
+        ingredients: ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
+        instructions: ["Step 1: Mock instruction", "Step 2: Mock instruction", "Step 3: Enjoy!"],
+        servings: 2
+      }
+    ];
+  }
+
   const { baseIngredients, mainIngredients, mealType, dietary } = params;
   
   // Create a smart prompt based on user input

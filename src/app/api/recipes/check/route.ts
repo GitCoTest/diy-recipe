@@ -4,7 +4,14 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl!, supabaseServiceRoleKey!);
+// Check if Supabase is properly configured
+if (!supabaseUrl || !supabaseServiceRoleKey || supabaseUrl.includes('your-project-id')) {
+  console.warn('⚠️ Supabase not configured - recipe check API will return mock data');
+}
+
+const supabase = supabaseUrl && supabaseServiceRoleKey && !supabaseUrl.includes('your-project-id') 
+  ? createClient(supabaseUrl, supabaseServiceRoleKey)
+  : null;
 
 // Check if a recipe is already saved by the user
 export async function GET(request: NextRequest) {
@@ -21,6 +28,16 @@ export async function GET(request: NextRequest) {
     }
 
     console.log("🔍 BACKEND: Checking if recipe is saved:", title, "for user:", userId);
+
+    // If Supabase is not configured, return mock data
+    if (!supabase) {
+      console.log("⚠️ Supabase not configured - returning mock data");
+      return NextResponse.json({
+        success: true,
+        isSaved: false,
+        recipeId: null,
+      });
+    }
 
     const { data: existingRecipe, error } = await supabase
       .from('saved_recipes')

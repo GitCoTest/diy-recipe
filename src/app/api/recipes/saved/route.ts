@@ -5,7 +5,14 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl!, supabaseServiceRoleKey!);
+// Check if Supabase is properly configured
+if (!supabaseUrl || !supabaseServiceRoleKey || supabaseUrl.includes('your-project-id')) {
+  console.warn('⚠️ Supabase not configured - saved recipes API will return mock data');
+}
+
+const supabase = supabaseUrl && supabaseServiceRoleKey && !supabaseUrl.includes('your-project-id') 
+  ? createClient(supabaseUrl, supabaseServiceRoleKey)
+  : null;
 
 // Save a recipe to the database
 export async function POST(request: NextRequest) {
@@ -16,6 +23,16 @@ export async function POST(request: NextRequest) {
     // Log for debugging
     console.log('BODY:', body);
     console.log('userId received:', userId);
+
+    // If Supabase is not configured, return mock success
+    if (!supabase) {
+      console.log("⚠️ Supabase not configured - returning mock success");
+      return NextResponse.json({
+        success: true,
+        message: 'Recipe saved successfully! (Mock mode)',
+        recipeId: 'mock-id-' + Date.now(),
+      });
+    }
 
     // Optionally, verify userId matches JWT (for extra security)
     // (If you want to enforce this, you can decode the JWT from the Authorization header)
@@ -86,6 +103,16 @@ export async function GET(request: NextRequest) {
     }
 
     console.log("📖 BACKEND: Fetching saved recipes for user:", userId);
+
+    // If Supabase is not configured, return mock data
+    if (!supabase) {
+      console.log("⚠️ Supabase not configured - returning mock saved recipes");
+      return NextResponse.json({
+        success: true,
+        recipes: [],
+        message: 'No saved recipes found (Mock mode)',
+      });
+    }
 
     const { data: savedRecipes, error } = await supabase
       .from('saved_recipes')
@@ -167,6 +194,15 @@ export async function DELETE(request: NextRequest) {
 
     console.log("🗑️ BACKEND: Deleting recipe:", recipeId, "for user:", userId);
 
+    // If Supabase is not configured, return mock success
+    if (!supabase) {
+      console.log("⚠️ Supabase not configured - returning mock delete success");
+      return NextResponse.json({
+        success: true,
+        message: 'Recipe deleted successfully! (Mock mode)',
+      });
+    }
+
     const { error } = await supabase
       .from('saved_recipes')
       .delete()
@@ -210,6 +246,16 @@ export async function PATCH(request: NextRequest) {
     }
 
     console.log("⭐ BACKEND: Updating recipe:", recipeId, "favorite:", favorite);
+
+    // If Supabase is not configured, return mock success
+    if (!supabase) {
+      console.log("⚠️ Supabase not configured - returning mock update success");
+      return NextResponse.json({
+        success: true,
+        message: 'Recipe updated successfully! (Mock mode)',
+        recipe: { id: recipeId, favorite: favorite },
+      });
+    }
 
     const updateData: { favorite?: boolean } = {};
     if (typeof favorite === 'boolean') {
