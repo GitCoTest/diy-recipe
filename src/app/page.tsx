@@ -34,6 +34,9 @@ export default function Home() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [mobileDiscoverOpen, setMobileDiscoverOpen] = useState(false);
+  const [mobileGroceryOpen, setMobileGroceryOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   
   // Voice functionality states
@@ -41,6 +44,8 @@ export default function Home() {
   const [voiceTranscript, setVoiceTranscript] = useState('');
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [botMessage, setBotMessage] = useState("Hi! I'm your cooking assistant. Tell me what you'd like to cook!");
+  const [recognition, setRecognition] = useState<any>(null);
+  const [interimTranscript, setInterimTranscript] = useState('');
   
   // Mascot states
   const [selectedMascot, setSelectedMascot] = useState('strawberry');
@@ -53,6 +58,30 @@ export default function Home() {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       setVoiceSupported(!!SpeechRecognition);
     }
+
+    // Cleanup function
+    return () => {
+      if (recognition) {
+        recognition.stop();
+      }
+    };
+  }, [recognition]);
+
+  // Close mobile dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('nav') && !target.closest('.mobile-dropdown')) {
+        setMobileDiscoverOpen(false);
+        setMobileGroceryOpen(false);
+        setSettingsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   // Mascot animation effect on page load
@@ -160,35 +189,96 @@ export default function Home() {
   const startVoiceRecognition = () => {
     if (!voiceSupported) return;
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
+    // Stop any existing recognition
+    if (recognition) {
+      recognition.stop();
+    }
 
-    recognition.onstart = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const newRecognition = new SpeechRecognition();
+    
+    newRecognition.continuous = true;
+    newRecognition.interimResults = true;
+    newRecognition.lang = 'en-US';
+    newRecognition.maxAlternatives = 1;
+
+    // Auto-stop after 10 seconds of listening (mobile-friendly)
+    const timeout = setTimeout(() => {
+      if (newRecognition) {
+        newRecognition.stop();
+      }
+    }, 10000);
+
+    newRecognition.onstart = () => {
       setIsListening(true);
+      setVoiceTranscript('');
+      setInterimTranscript('');
       setBotMessage("I'm listening... Tell me what you'd like to cook!");
     };
 
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setVoiceTranscript(transcript);
-      setIsListening(false);
-      processVoiceRequest(transcript);
+    newRecognition.onresult = (event: any) => {
+      let finalTranscript = '';
+      let interimText = '';
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimText += transcript;
+        }
+      }
+
+      // Update real-time transcript
+      if (interimText) {
+        setInterimTranscript(interimText);
+        setVoiceTranscript(finalTranscript + interimText);
+      }
+
+      // If we have a final result, process it
+      if (finalTranscript) {
+        clearTimeout(timeout);
+        setVoiceTranscript(finalTranscript);
+        setInterimTranscript('');
+        setIsListening(false);
+        newRecognition.stop();
+        processVoiceRequest(finalTranscript);
+      }
     };
 
-    recognition.onerror = () => {
+    newRecognition.onerror = (event: any) => {
+      clearTimeout(timeout);
       setIsListening(false);
-      setBotMessage("Sorry, I didn't catch that. Try again or use manual selection below!");
+      setInterimTranscript('');
+      console.error('Speech recognition error:', event.error);
+      
+      if (event.error === 'no-speech') {
+        setBotMessage("I didn't hear anything. Try speaking louder or closer to your device!");
+      } else if (event.error === 'audio-capture') {
+        setBotMessage("Microphone access denied. Please allow microphone access and try again.");
+      } else {
+        setBotMessage("Sorry, I had trouble hearing you. Try again or use manual selection below!");
+      }
     };
 
-    recognition.onend = () => {
+    newRecognition.onend = () => {
+      clearTimeout(timeout);
       setIsListening(false);
+      setInterimTranscript('');
     };
 
-    recognition.start();
+    setRecognition(newRecognition);
+    newRecognition.start();
+  };
+
+  // Function to manually stop listening
+  const stopVoiceRecognition = () => {
+    if (recognition && isListening) {
+      recognition.stop();
+      setIsListening(false);
+      setInterimTranscript('');
+    }
   };
 
   const scrollToManualSelection = () => {
@@ -319,42 +409,126 @@ export default function Home() {
     <div className="min-h-screen bg-yellow-50">
       {/* Header Navigation */}
       <div className="w-full flex justify-center items-center pt-2 sm:pt-4 pb-2 z-40 relative">
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-auto px-2 sm:px-0">
-          <nav className="floating-zoom flex flex-row gap-3 sm:gap-6 md:gap-10 px-3 sm:px-6 py-2 bg-white/90 backdrop-blur border border-pink-200 shadow-xl rounded-full items-center text-sm sm:text-base md:text-lg font-bold text-gray-800 overflow-x-auto">
-            <Link href="/" className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
-              <span className="text-base sm:text-xl md:text-2xl">🏠</span>
+        <div className="flex flex-row gap-2 sm:gap-4 w-auto px-2 sm:px-0">
+          {/* Mobile Navigation - Emojis Only */}
+          <nav className="sm:hidden floating-zoom flex flex-row gap-3 px-3 py-2 bg-white/90 backdrop-blur border border-pink-200 shadow-xl rounded-full items-center text-xl font-bold text-gray-800">
+            <Link href="/" className="hover:text-pink-600 transition-colors p-1">
+              🏠
+            </Link>
+            <button 
+              onClick={() => {
+                setMobileDiscoverOpen(!mobileDiscoverOpen);
+                setMobileGroceryOpen(false);
+                setSettingsOpen(false);
+              }}
+              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
+            >
+              🔎
+              {mobileDiscoverOpen && (
+                <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 w-32 z-50">
+                  <a href="#discover" className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm">
+                    <span>🔎</span><span>Discover</span>
+                  </a>
+                </div>
+              )}
+            </button>
+            <button 
+              type="button" 
+              onClick={surpriseMe} 
+              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer"
+            >
+              💡
+            </button>
+            <button 
+              onClick={() => window.location.href = '/saved-recipes'} 
+              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer"
+            >
+              📖
+            </button>
+            <button 
+              onClick={() => {
+                setMobileGroceryOpen(!mobileGroceryOpen);
+                setMobileDiscoverOpen(false);
+                setSettingsOpen(false);
+              }}
+              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
+            >
+              🛒
+              {mobileGroceryOpen && (
+                <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 w-32 z-50">
+                  <a href="#grocery" className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm">
+                    <span>🛒</span><span>Grocery</span>
+                  </a>
+                </div>
+              )}
+            </button>
+            {/* Settings in same line for mobile */}
+            <button
+              onClick={() => {
+                setSettingsOpen(!settingsOpen);
+                setMobileDiscoverOpen(false);
+                setMobileGroceryOpen(false);
+              }}
+              className="hover:text-pink-600 transition-colors bg-transparent border-0 p-1 m-0 font-bold cursor-pointer relative"
+            >
+              ⚙️
+              {settingsOpen && (
+                <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 w-40 z-50">
+                  {!user ? (
+                    <>
+                      <a href="/login" className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm">
+                        <span>🔑</span><span>Log In</span>
+                      </a>
+                      <a href="/signup" className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm">
+                        <span>📝</span><span>Sign Up</span>
+                      </a>
+                    </>
+                  ) : (
+                    <a href="/profile" className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 transition-colors text-sm">
+                      <span>👤</span><span>Profile</span>
+                    </a>
+                  )}
+                </div>
+              )}
+            </button>
+          </nav>
+
+          {/* Desktop Navigation - Full Names */}
+          <nav className="hidden sm:flex floating-zoom flex-row gap-6 md:gap-10 px-6 py-2 bg-white/90 backdrop-blur border border-pink-200 shadow-xl rounded-full items-center text-base md:text-lg font-bold text-gray-800">
+            <Link href="/" className="flex items-center gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
+              <span className="text-xl md:text-2xl">🏠</span>
               <span className="tracking-wide">Home</span>
             </Link>
-            <a href="#discover" className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
-              <span className="text-base sm:text-xl md:text-2xl">🔎</span>
-              <span className="tracking-wide hidden sm:inline">Discover</span>
+            <a href="#discover" className="flex items-center gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
+              <span className="text-xl md:text-2xl">🔎</span>
+              <span className="tracking-wide">Discover</span>
             </a>
-            <button type="button" onClick={surpriseMe} className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer whitespace-nowrap">
-              <span className="text-base sm:text-xl md:text-2xl">💡</span>
-              <span className="tracking-wide">Surprise<span className="hidden sm:inline"> Me!</span></span>
+            <button type="button" onClick={surpriseMe} className="flex items-center gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer whitespace-nowrap">
+              <span className="text-xl md:text-2xl">💡</span>
+              <span className="tracking-wide">Surprise Me!</span>
             </button>
-            <button onClick={() => window.location.href = '/saved-recipes'} className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer whitespace-nowrap">
-              <span className="text-base sm:text-xl md:text-2xl">📖</span>
+            <button onClick={() => window.location.href = '/saved-recipes'} className="flex items-center gap-2 hover:text-pink-600 transition-colors bg-transparent border-0 p-0 m-0 font-bold cursor-pointer whitespace-nowrap">
+              <span className="text-xl md:text-2xl">📖</span>
               <span className="tracking-wide">Saved</span>
             </button>
-            <a href="#grocery" className="flex items-center gap-1 sm:gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
-              <span className="text-base sm:text-xl md:text-2xl">🛒</span>
-              <span className="tracking-wide hidden sm:inline">Grocery</span>
+            <a href="#grocery" className="flex items-center gap-2 hover:text-pink-600 transition-colors whitespace-nowrap">
+              <span className="text-xl md:text-2xl">🛒</span>
+              <span className="tracking-wide">Grocery</span>
             </a>
           </nav>
           
-          {/* Settings Button */}
-          <div className="relative flex items-center justify-center sm:justify-start">
+          {/* Desktop Settings Button */}
+          <div className="hidden sm:flex relative items-center justify-start">
             <button
               onClick={() => setSettingsOpen(!settingsOpen)}
-              className="floating-zoom flex items-center gap-2 bg-white rounded-full px-3 sm:px-4 py-2 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
+              className="floating-zoom flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-200 text-base"
             >
-              <span className="text-base sm:text-lg">⚙️</span>
+              <span className="text-lg">⚙️</span>
               <span className="text-gray-700 font-medium">Settings</span>
               <span className={`transform transition-transform ${settingsOpen ? 'rotate-180' : ''}`}>▼</span>
             </button>
             {settingsOpen && (
-              <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 w-48 z-10">
+              <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 py-2 w-48 z-50">
                 {!user ? (
                   <>
                     <a href="/login" className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
@@ -451,7 +625,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
             <button
-              onClick={startVoiceRecognition}
+              onClick={isListening ? stopVoiceRecognition : startVoiceRecognition}
               disabled={!voiceSupported || isGenerating}
               className={`px-8 py-4 rounded-full font-bold text-lg shadow-lg transform transition-all duration-200 ${
                 isListening 
@@ -464,7 +638,7 @@ export default function Home() {
               {isListening ? (
                 <span className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
-                  Listening...
+                  Stop Listening
                 </span>
               ) : !voiceSupported ? (
                 'Voice Not Supported'
@@ -479,13 +653,22 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Voice Transcript Display */}
-          {voiceTranscript && (
+          {/* Voice Transcript Display - Real-time */}
+          {(voiceTranscript || interimTranscript || isListening) && (
             <div className="flex justify-center mb-4">
-              <div className="bg-purple-50 border border-purple-200 rounded-full px-4 py-2 max-w-md">
-                <p className="text-sm text-purple-700 text-center font-medium">
-                  "{voiceTranscript}"
-                </p>
+              <div className="bg-purple-50 border border-purple-200 rounded-full px-4 py-2 max-w-md min-h-[2.5rem] flex items-center">
+                {isListening && !voiceTranscript && !interimTranscript ? (
+                  <p className="text-sm text-purple-500 text-center font-medium animate-pulse">
+                    Listening...
+                  </p>
+                ) : (
+                  <p className="text-sm text-purple-700 text-center font-medium">
+                    {voiceTranscript || interimTranscript ? `"${voiceTranscript || interimTranscript}"` : ''}
+                    {isListening && interimTranscript && (
+                      <span className="animate-pulse text-purple-500">|</span>
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -537,7 +720,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-6 mb-6 sm:mb-8 px-1 sm:px-0">
             <IngredientSelector onIngredientsChange={handleIngredientsChange} />
             <Preferences onPreferencesChange={handlePreferencesChange} />
           </div>

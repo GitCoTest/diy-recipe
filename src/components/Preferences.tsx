@@ -39,7 +39,7 @@ export default function Preferences({ onPreferencesChange }: PreferencesProps) {
   return (
     <>
       {/* Meal Type - mobile optimized */}
-      <div className="bg-white bg-opacity-40 p-2 sm:p-4 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm border-2 sm:border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
+      <div className="ingredient-selector-mobile bg-white bg-opacity-40 p-2 sm:p-4 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm border-2 sm:border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
         <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-2 sm:mb-4 bg-pink-100 bg-opacity-50 p-1 sm:p-2 rounded text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
           Meal Type
         </h3>
@@ -60,7 +60,7 @@ export default function Preferences({ onPreferencesChange }: PreferencesProps) {
       </div>
 
       {/* Dietary Preferences - mobile optimized */}
-      <div className="bg-white bg-opacity-40 p-2 sm:p-4 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm border-2 sm:border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
+      <div className="ingredient-selector-mobile bg-white bg-opacity-40 p-2 sm:p-4 lg:p-8 rounded-xl sm:rounded-2xl shadow-sm border-2 sm:border-4 border-pink-300" style={{ boxShadow: 'inset 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px rgba(236, 72, 153, 0.5)' }}>
         <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-2 sm:mb-4 bg-pink-100 bg-opacity-50 p-1 sm:p-2 rounded text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
           Dietary Needs
         </h3>
