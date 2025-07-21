@@ -135,7 +135,131 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     
     console.log('🎯 Smart image classification for:', titleLower);
     
-    // Smart cuisine detection based on ingredients and keywords
+    // PRIORITY 1: Specific ingredient-based images (highest priority)
+    const specificIngredientImages: Record<string, string> = {
+      // Indian/South Asian ingredients
+      'paneer': 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&h=600&fit=crop&auto=format', // Paneer Butter Masala
+      'tofu': 'https://images.unsplash.com/photo-1609501676725-7186f932a4de?w=800&h=600&fit=crop&auto=format', // Tofu Stir Fry
+      'chickpeas': 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=800&h=600&fit=crop&auto=format', // Chickpea Curry
+      'lentils': 'https://images.unsplash.com/photo-1627662168623-9adb3bdc1c4d?w=800&h=600&fit=crop&auto=format', // Lentil Dal
+      'tempeh': 'https://images.unsplash.com/photo-1609501676725-7186f932a4de?w=800&h=600&fit=crop&auto=format', // Tempeh Bowl
+      
+      // Cheese varieties
+      'feta': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=600&fit=crop&auto=format', // Greek Salad with Feta
+      'mozzarella': 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=600&fit=crop&auto=format', // Margherita Pizza
+      'goat cheese': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Goat Cheese Salad
+      'ricotta': 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&auto=format', // Ricotta Pasta
+      'cheddar': 'https://images.unsplash.com/photo-1471282334269-facbaf40b3b7?w=800&h=600&fit=crop&auto=format', // Mac and Cheese
+      
+      // Specialty proteins
+      'halloumi': 'https://images.unsplash.com/photo-1515516969554-d0e4d2bfc7b6?w=800&h=600&fit=crop&auto=format', // Grilled Halloumi
+      'quinoa': 'https://images.unsplash.com/photo-1505253213348-cd54c92b37ed?w=800&h=600&fit=crop&auto=format', // Quinoa Bowl
+      'cauliflower': 'https://images.unsplash.com/photo-1568584711271-0cd4a3e7ba8a?w=800&h=600&fit=crop&auto=format', // Roasted Cauliflower
+      'mushrooms': 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?w=800&h=600&fit=crop&auto=format', // Mushroom Dish
+      'eggplant': 'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=800&h=600&fit=crop&auto=format', // Eggplant Parmesan
+      'zucchini': 'https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?w=800&h=600&fit=crop&auto=format', // Zucchini Noodles
+      'asparagus': 'https://images.unsplash.com/photo-1551248429-40975aa4de74?w=800&h=600&fit=crop&auto=format', // Grilled Asparagus
+      'broccoli': 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=800&h=600&fit=crop&auto=format', // Broccoli Stir Fry
+      
+      // Seafood specifics
+      'salmon': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format', // Grilled Salmon
+      'tuna': 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&h=600&fit=crop&auto=format', // Tuna Sushi
+      'cod': 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=800&h=600&fit=crop&auto=format', // Cod Fillet
+      'crab': 'https://images.unsplash.com/photo-1565680018434-b513d5573b07?w=800&h=600&fit=crop&auto=format', // Crab Dish
+      'shrimp': 'https://images.unsplash.com/photo-1565680018434-b513d5573b07?w=800&h=600&fit=crop&auto=format', // Shrimp
+      'prawns': 'https://images.unsplash.com/photo-1565680018434-b513d5573b07?w=800&h=600&fit=crop&auto=format', // Prawns
+      
+      // Nuts and seeds
+      'almonds': 'https://images.unsplash.com/photo-1517543075167-ac2e668c7b30?w=800&h=600&fit=crop&auto=format', // Almond Dish
+      'cashews': 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&h=600&fit=crop&auto=format', // Cashew Curry
+      'pine nuts': 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800&h=600&fit=crop&auto=format', // Pine Nut Pasta
+      'sesame': 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&h=600&fit=crop&auto=format', // Sesame Noodles
+      'walnuts': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Walnut Salad
+      'pecans': 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop&auto=format', // Pecan Dessert
+      
+      // Grains and starches
+      'risotto rice': 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&h=600&fit=crop&auto=format', // Risotto
+      'basmati': 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format', // Basmati Rice
+      'jasmine rice': 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format', // Jasmine Rice
+      'wild rice': 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format', // Wild Rice Bowl
+      'couscous': 'https://images.unsplash.com/photo-1584949091598-c31daaaa4aa9?w=800&h=600&fit=crop&auto=format', // Couscous Dish
+      'bulgur': 'https://images.unsplash.com/photo-1584949091598-c31daaaa4aa9?w=800&h=600&fit=crop&auto=format', // Bulgur Salad
+      
+      // Fruits and vegetables
+      'avocado': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Avocado Toast/Salad
+      'spinach': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Spinach Salad
+      'kale': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Kale Salad
+      'sweet potato': 'https://images.unsplash.com/photo-1605027990121-cbae9d0da6db?w=800&h=600&fit=crop&auto=format', // Sweet Potato Dish
+      'butternut squash': 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=600&fit=crop&auto=format', // Butternut Squash Soup
+      'beets': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Beet Salad
+      'carrots': 'https://images.unsplash.com/photo-1445282768818-728615cc910a?w=800&h=600&fit=crop&auto=format', // Carrot Dish
+    };
+    
+    // Check for specific ingredient matches first (highest priority)
+    // Also check for alternative names and variations
+    for (const [ingredient, imageUrl] of Object.entries(specificIngredientImages)) {
+      // Check both exact match and variations
+      const variations: Record<string, string[]> = {
+        'paneer': ['paneer', 'cottage cheese'],
+        'tofu': ['tofu', 'bean curd', 'soy protein'],
+        'chickpeas': ['chickpeas', 'garbanzo beans', 'chole'],
+        'lentils': ['lentils', 'dal', 'daal', 'masoor', 'moong', 'chana dal'],
+        'tempeh': ['tempeh'],
+        'feta': ['feta cheese', 'feta'],
+        'mozzarella': ['mozzarella', 'mozzarella cheese'],
+        'goat cheese': ['goat cheese', 'chèvre', 'chevre'],
+        'ricotta': ['ricotta', 'ricotta cheese'],
+        'cheddar': ['cheddar', 'cheddar cheese'],
+        'halloumi': ['halloumi', 'halloumi cheese'],
+        'quinoa': ['quinoa'],
+        'cauliflower': ['cauliflower', 'cauliflower rice'],
+        'mushrooms': ['mushrooms', 'mushroom', 'shiitake', 'portobello', 'cremini'],
+        'eggplant': ['eggplant', 'aubergine', 'brinjal'],
+        'zucchini': ['zucchini', 'courgette', 'zucchini noodles'],
+        'asparagus': ['asparagus'],
+        'broccoli': ['broccoli'],
+        'salmon': ['salmon'],
+        'tuna': ['tuna'],
+        'cod': ['cod'],
+        'crab': ['crab', 'crabmeat'],
+        'shrimp': ['shrimp', 'prawns'],
+        'prawns': ['prawns', 'shrimp'],
+        'almonds': ['almonds', 'almond'],
+        'cashews': ['cashews', 'cashew'],
+        'pine nuts': ['pine nuts', 'pignoli'],
+        'sesame': ['sesame', 'tahini', 'sesame oil'],
+        'walnuts': ['walnuts', 'walnut'],
+        'pecans': ['pecans', 'pecan'],
+        'risotto rice': ['risotto rice', 'arborio rice'],
+        'basmati': ['basmati rice', 'basmati'],
+        'jasmine rice': ['jasmine rice'],
+        'wild rice': ['wild rice'],
+        'couscous': ['couscous'],
+        'bulgur': ['bulgur', 'bulgur wheat'],
+        'avocado': ['avocado'],
+        'spinach': ['spinach'],
+        'kale': ['kale'],
+        'sweet potato': ['sweet potato', 'sweet potatoes'],
+        'butternut squash': ['butternut squash', 'butternut'],
+        'beets': ['beets', 'beetroot'],
+        'carrots': ['carrots', 'carrot']
+      };
+      
+      const checkVariations = variations[ingredient] || [ingredient];
+      const found = checkVariations.some((variant: string) => 
+        ingredientsText.includes(variant) || titleLower.includes(variant)
+      );
+      
+      if (found) {
+        const matchedVariant = checkVariations.find((variant: string) => 
+          ingredientsText.includes(variant) || titleLower.includes(variant)
+        );
+        console.log(`🎯 Specific ingredient match found: ${ingredient} (matched as: ${matchedVariant})`);
+        return imageUrl;
+      }
+    }
+    
+    // PRIORITY 2: Smart cuisine detection based on ingredients and keywords
     const cuisinePatterns: Record<string, string[]> = {
       mexican: ['tortilla', 'fajita', 'taco', 'burrito', 'enchilada', 'quesadilla', 'nachos', 'salsa', 'cilantro', 'jalapeño', 'chipotle', 'cumin', 'lime'],
       italian: ['pasta', 'spaghetti', 'linguine', 'fettuccine', 'penne', 'rigatoni', 'marinara', 'basil', 'oregano', 'parmesan', 'mozzarella', 'aglio', 'olio'],
