@@ -146,15 +146,57 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
       dessert: ['cake', 'cookie', 'brownie', 'muffin', 'cupcake', 'chocolate', 'vanilla', 'sugar', 'flour', 'baking powder']
     };
     
-    // Image database by cuisine type
-    const cuisineImages: Record<string, string> = {
-      mexican: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format',
-      italian: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&auto=format',
-      asian: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format',
-      american: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop&auto=format',
-      mediterranean: 'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format',
-      indian: 'https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=800&h=600&fit=crop&auto=format',
-      dessert: 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop&auto=format'
+    // Image database by cuisine type (multiple images per cuisine for variety)
+    const cuisineImages: Record<string, string[]> = {
+      mexican: [
+        'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format', // Tacos
+        'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=800&h=600&fit=crop&auto=format', // Burrito
+        'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800&h=600&fit=crop&auto=format', // Fajitas
+        'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=800&h=600&fit=crop&auto=format', // Nachos
+        'https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=800&h=600&fit=crop&auto=format'  // Quesadilla
+      ],
+      italian: [
+        'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&auto=format', // Spaghetti
+        'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800&h=600&fit=crop&auto=format', // Aglio e Olio
+        'https://images.unsplash.com/photo-1572441713132-51c75654db73?w=800&h=600&fit=crop&auto=format', // Creamy Pasta
+        'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=600&fit=crop&auto=format', // Pizza
+        'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=800&h=600&fit=crop&auto=format'  // Pasta Variety
+      ],
+      asian: [
+        'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format', // Fried Rice
+        'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&h=600&fit=crop&auto=format', // Ramen
+        'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&h=600&fit=crop&auto=format', // Sushi
+        'https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=800&h=600&fit=crop&auto=format', // Curry
+        'https://images.unsplash.com/photo-1512003867696-6d5ce6835040?w=800&h=600&fit=crop&auto=format'  // Stir Fry
+      ],
+      american: [
+        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop&auto=format', // Burger
+        'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&h=600&fit=crop&auto=format', // Pancakes
+        'https://images.unsplash.com/photo-1471282334269-facbaf40b3b7?w=800&h=600&fit=crop&auto=format', // Mac and Cheese
+        'https://images.unsplash.com/photo-1562376552-0d160dc2f296?w=800&h=600&fit=crop&auto=format', // Waffles
+        'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&h=600&fit=crop&auto=format'  // French Toast
+      ],
+      mediterranean: [
+        'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format', // Hummus & Falafel
+        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=600&fit=crop&auto=format', // Greek Salad
+        'https://images.unsplash.com/photo-1515516969554-d0e4d2bfc7b6?w=800&h=600&fit=crop&auto=format', // Gyro
+        'https://images.unsplash.com/photo-1584949091598-c31daaaa4aa9?w=800&h=600&fit=crop&auto=format', // Mediterranean Bowl
+        'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop&auto=format'  // Pita Bread
+      ],
+      indian: [
+        'https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=800&h=600&fit=crop&auto=format', // Curry
+        'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&h=600&fit=crop&auto=format', // Biryani
+        'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&h=600&fit=crop&auto=format', // Naan & Curry
+        'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&h=600&fit=crop&auto=format', // Tandoori
+        'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format'  // Rice Dishes
+      ],
+      dessert: [
+        'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop&auto=format', // Chocolate Cake
+        'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop&auto=format', // Mug Cake
+        'https://images.unsplash.com/photo-1556906918-a05b6e2c94ad?w=800&h=600&fit=crop&auto=format', // Brownies
+        'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&h=600&fit=crop&auto=format', // Cookies
+        'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=800&h=600&fit=crop&auto=format'  // Cupcakes
+      ]
     };
     
     // Calculate cuisine scores based on keyword matches
@@ -179,35 +221,75 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     
     // Return image if we have a confident match (score > 0)
     if (cuisineScores[bestCuisine] > 0) {
-      return cuisineImages[bestCuisine];
+      const imageArray = cuisineImages[bestCuisine];
+      // Use title hash to consistently select the same image for the same recipe
+      const imageIndex = Math.abs(titleLower.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % imageArray.length;
+      console.log(`🎨 Selected image ${imageIndex + 1}/${imageArray.length} for ${bestCuisine} cuisine`);
+      return imageArray[imageIndex];
     }
     
-    // Fallback: analyze by main ingredient type
-    const proteinImages: Record<string, string> = {
-      chicken: 'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop&auto=format',
-      beef: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format',
-      fish: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format',
-      pork: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format',
-      shrimp: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format'
+    // Fallback: analyze by main ingredient type (multiple images for variety)
+    const proteinImages: Record<string, string[]> = {
+      chicken: [
+        'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop&auto=format', // Grilled Chicken
+        'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800&h=600&fit=crop&auto=format', // Chicken Dinner
+        'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=600&fit=crop&auto=format'  // Roasted Chicken
+      ],
+      beef: [
+        'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format', // Steak
+        'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop&auto=format', // Beef Stir Fry
+        'https://images.unsplash.com/photo-1558030006-450675393462?w=800&h=600&fit=crop&auto=format'  // Beef Dish
+      ],
+      fish: [
+        'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format', // Salmon
+        'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=800&h=600&fit=crop&auto=format', // Fish Fillet
+        'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=800&h=600&fit=crop&auto=format'  // Grilled Fish
+      ],
+      pork: [
+        'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&h=600&fit=crop&auto=format'
+      ],
+      shrimp: [
+        'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format',
+        'https://images.unsplash.com/photo-1565680018434-b513d5573b07?w=800&h=600&fit=crop&auto=format'
+      ]
     };
     
-    // Check for protein matches
-    for (const [protein, image] of Object.entries(proteinImages)) {
+    // Check for protein matches with variety
+    for (const [protein, imageArray] of Object.entries(proteinImages)) {
       if (ingredientsText.includes(protein) || titleLower.includes(protein)) {
-        console.log('🥩 Protein match:', protein);
-        return image;
+        const imageIndex = Math.abs(titleLower.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % imageArray.length;
+        console.log(`🥩 Protein match: ${protein}, image ${imageIndex + 1}/${imageArray.length}`);
+        return imageArray[imageIndex];
       }
     }
     
-    // Dish type fallbacks
-    if (titleLower.includes('soup') || titleLower.includes('stew')) {
-      return 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('salad')) {
-      return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('rice')) {
-      return 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format';
+    // Dish type fallbacks with variety
+    const dishTypeImages: Record<string, string[]> = {
+      soup: [
+        'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=600&fit=crop&auto=format', // Soup Bowl
+        'https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=800&h=600&fit=crop&auto=format', // Tomato Soup
+        'https://images.unsplash.com/photo-1543158266-0066b64bcfce?w=800&h=600&fit=crop&auto=format'  // Chicken Soup
+      ],
+      salad: [
+        'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format', // Mixed Salad
+        'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=600&fit=crop&auto=format', // Caesar Salad
+        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=600&fit=crop&auto=format'  // Greek Salad
+      ],
+      rice: [
+        'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format', // Rice Bowl
+        'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format', // Fried Rice
+        'https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&h=600&fit=crop&auto=format'  // Risotto
+      ]
+    };
+    
+    // Check dish types with variety
+    for (const [dishType, imageArray] of Object.entries(dishTypeImages)) {
+      if (titleLower.includes(dishType)) {
+        const imageIndex = Math.abs(titleLower.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % imageArray.length;
+        console.log(`🍽️ Dish type match: ${dishType}, image ${imageIndex + 1}/${imageArray.length}`);
+        return imageArray[imageIndex];
+      }
     }
     
     // No specific match found
