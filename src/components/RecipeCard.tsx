@@ -171,6 +171,23 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
       return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=600&fit=crop&auto=format';
     }
     
+    // Mexican/Latin American food
+    if (titleLower.includes('tortilla') || titleLower.includes('tortillas')) {
+      return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('taco') || titleLower.includes('tacos')) {
+      return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('burrito') || titleLower.includes('quesadilla')) {
+      return 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('enchilada') || titleLower.includes('fajita')) {
+      return 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('nachos')) {
+      return 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=800&h=600&fit=crop&auto=format';
+    }
+    
     // Burgers
     if (titleLower.includes('burger') || titleLower.includes('sandwich')) {
       return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop&auto=format';
@@ -199,9 +216,48 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
       return 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=600&fit=crop&auto=format';
     }
     
-    // Fish
-    if (ingredientsText.includes('fish') || ingredientsText.includes('salmon')) {
-      return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format';
+    // Breakfast items
+    if (titleLower.includes('french toast') || titleLower.includes('toast')) {
+      return 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('oatmeal') || titleLower.includes('porridge')) {
+      return 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('eggs') || titleLower.includes('omelet')) {
+      return 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Bread and baked goods
+    if (titleLower.includes('bread') || titleLower.includes('loaf')) {
+      return 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('muffin') || titleLower.includes('cupcake')) {
+      return 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('donut') || titleLower.includes('doughnut')) {
+      return 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Asian cuisine
+    if (titleLower.includes('stir fry') || titleLower.includes('stir-fry')) {
+      return 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('ramen') || titleLower.includes('noodle soup')) {
+      return 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('sushi') || titleLower.includes('roll')) {
+      return 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('curry')) {
+      return 'https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Mediterranean
+    if (titleLower.includes('hummus') || titleLower.includes('falafel')) {
+      return 'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('gyro') || titleLower.includes('pita')) {
+      return 'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format';
     }
     
     // Only return salad for actual salads

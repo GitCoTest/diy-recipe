@@ -90,8 +90,8 @@ export const getFoodImage = async (title: string, ingredients: string[]): Promis
     }
   }
 
-  // Strategy 3: Try simplified recipe type
-  const recipeTypes = ['pasta', 'cake', 'soup', 'chicken', 'beef', 'fish', 'rice'];
+  // Strategy 3: Try simplified recipe type (more comprehensive)
+  const recipeTypes = ['tortilla', 'pasta', 'cake', 'soup', 'chicken', 'beef', 'fish', 'rice', 'taco', 'pizza', 'burger'];
   for (const type of recipeTypes) {
     if (titleLower.includes(type)) {
       imageUrl = await searchTheMealDB(type);
@@ -215,8 +215,14 @@ const getUnsplashFoodImage = (titleLower: string, ingredientsText: string): stri
   }
   
   // Mexican food
+  if (titleLower.includes('tortilla') || titleLower.includes('tortillas')) {
+    return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format';
+  }
   if (titleLower.includes('taco') || titleLower.includes('burrito') || titleLower.includes('quesadilla')) {
     return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format';
+  }
+  if (titleLower.includes('enchilada') || titleLower.includes('fajita') || titleLower.includes('nachos')) {
+    return 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800&h=600&fit=crop&auto=format';
   }
   
   // Asian cuisine
