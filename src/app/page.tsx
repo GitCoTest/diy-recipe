@@ -651,8 +651,15 @@ export default function Home() {
                   ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
                   : !voiceSupported || isGenerating
                   ? 'bg-gray-400 cursor-not-allowed text-white'
-                  : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white hover:scale-105'
+                  : 'voice-button bg-pink-600 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white hover:scale-105'
               }`}
+              style={!isListening && voiceSupported && !isGenerating ? {
+                background: 'linear-gradient(to right, #9333ea, #db2777)',
+                WebkitBackgroundClip: 'padding-box',
+                backgroundClip: 'padding-box',
+                border: 'none',
+                outline: 'none'
+              } : undefined}
             >
               {isListening ? (
                 <span className="flex items-center gap-2">

@@ -594,6 +594,39 @@ body {
   }
 }
 
+/* iOS Safari compatibility fixes */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific styles */
+  .bg-gradient-to-r {
+    background: linear-gradient(to right, #9333ea, #db2777) !important;
+    -webkit-background-clip: padding-box !important;
+    background-clip: padding-box !important;
+  }
+  
+  /* Ensure buttons are properly rendered on iOS */
+  button {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  /* Fix for iOS gradient rendering issues */
+  .voice-button {
+    background: #db2777 !important; /* Fallback color */
+    background: linear-gradient(to right, #9333ea, #db2777) !important;
+  }
+}
+
+/* Webkit-specific gradient fixes */
+@supports (-webkit-linear-gradient(left, #9333ea, #db2777)) {
+  .bg-gradient-to-r.from-purple-600.to-pink-600 {
+    background: -webkit-linear-gradient(left, #9333ea, #db2777) !important;
+    background: linear-gradient(to right, #9333ea, #db2777) !important;
+  }
+}
+
 /* Remove the individual puff elements since we're using proper elements */
 .cloud-puff {
   display: none;

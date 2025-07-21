@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { getCachedFoodImage } from '@/lib/foodImageApi';
 
 interface Recipe {
   title: string;
@@ -30,6 +31,8 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
   const [isAlreadySaved, setIsAlreadySaved] = useState(false);
   const [checkingSavedStatus, setCheckingSavedStatus] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [dynamicImageUrl, setDynamicImageUrl] = useState<string>('');
 
   // Check if recipe is already saved when component mounts
   useEffect(() => {
@@ -56,16 +59,38 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     checkSavedStatus();
   }, [recipe.title, onClose]);
 
+  // Load dynamic food image
+  useEffect(() => {
+    const loadFoodImage = async () => {
+      if (!recipe.image) { // Only fetch if no image is provided
+        try {
+          const imageResult = await getCachedFoodImage(recipe.title, recipe.ingredients);
+          setDynamicImageUrl(imageResult.imageUrl);
+          console.log(`🖼️ Loaded ${imageResult.source} image with ${Math.round(imageResult.confidence * 100)}% confidence`);
+        } catch (error) {
+          console.error('Error loading food image:', error);
+          // Fallback to existing logic
+          setDynamicImageUrl(getRecipeImageUrl(recipe.title, recipe.ingredients));
+        }
+      }
+    };
+
+    loadFoodImage();
+  }, [recipe.title, recipe.ingredients, recipe.image]);
+
   const handleSave = async () => {
     setSaving(true);
     setError('');
+    
     // Get user
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      setError('You must be signed in to save recipes!');
+      // Show custom login prompt modal
+      setShowLoginPrompt(true);
       setSaving(false);
       return;
     }
+    
     try {
       const res = await fetch('/api/recipes/saved', {
         method: 'POST',
@@ -527,7 +552,7 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
           {/* Hero Image */}
           <div className="relative h-80 bg-gradient-to-br from-amber-100 to-orange-200 rounded-t-2xl overflow-hidden">
             <img 
-              src={recipe.image || getRecipeImageUrl(recipe.title, recipe.ingredients)} 
+              src={recipe.image || dynamicImageUrl || getRecipeImageUrl(recipe.title, recipe.ingredients)} 
               alt={recipe.title}
               className="w-full h-full object-cover"
               onError={(e) => {
@@ -775,6 +800,38 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login Prompt Modal */}
+      {showLoginPrompt && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-[60]">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+            <div className="text-center">
+              <div className="text-4xl mb-4">🔐</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Login Required</h3>
+              <p className="text-gray-600 mb-6">
+                You need to be logged in to save recipes. Join our community to save and organize your favorite recipes!
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLoginPrompt(false)}
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowLoginPrompt(false);
+                    window.location.href = '/login';
+                  }}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 font-medium shadow-md"
+                >
+                  Login
+                </button>
+              </div>
             </div>
           </div>
         </div>
