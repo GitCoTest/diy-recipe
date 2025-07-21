@@ -64,12 +64,21 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     const loadFoodImage = async () => {
       if (!recipe.image) { // Only fetch if no image is provided
         try {
+          // First try our enhanced local mapping for immediate results
+          const localImage = getLocalFoodImage(recipe.title, recipe.ingredients);
+          if (localImage) {
+            setDynamicImageUrl(localImage);
+            console.log('🎯 Using enhanced local food image mapping');
+            return;
+          }
+          
+          // Fallback to API if local mapping doesn't find anything
           const imageResult = await getCachedFoodImage(recipe.title, recipe.ingredients);
           setDynamicImageUrl(imageResult.imageUrl);
           console.log(`🖼️ Loaded ${imageResult.source} image with ${Math.round(imageResult.confidence * 100)}% confidence`);
         } catch (error) {
           console.error('Error loading food image:', error);
-          // Fallback to existing logic
+          // Final fallback to existing logic
           setDynamicImageUrl(getRecipeImageUrl(recipe.title, recipe.ingredients));
         }
       }
@@ -117,6 +126,91 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
       setError(error.message || 'Failed to save recipe.');
     }
     setSaving(false);
+  };
+
+  // Enhanced local food image mapping (immediate, no API calls)
+  const getLocalFoodImage = (title: string, ingredients: string[]) => {
+    const titleLower = title.toLowerCase();
+    const ingredientsText = ingredients.join(' ').toLowerCase();
+    
+    console.log('🎯 Local image mapping for:', titleLower);
+    
+    // Pasta dishes (very specific matching first)
+    if (titleLower.includes('aglio') && titleLower.includes('olio')) {
+      return 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('carbonara')) {
+      return 'https://images.unsplash.com/photo-1572441713132-51c75654db73?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('spaghetti') || titleLower.includes('linguine') || titleLower.includes('pasta')) {
+      return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Desserts and baked goods
+    if (titleLower.includes('mug cake') || (titleLower.includes('microwave') && titleLower.includes('cake'))) {
+      return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('chocolate') && titleLower.includes('cake')) {
+      return 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('peanut butter') && titleLower.includes('cake')) {
+      return 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('brownie')) {
+      return 'https://images.unsplash.com/photo-1556906918-a05b6e2c94ad?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('cookie')) {
+      return 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('pancake')) {
+      return 'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Pizza
+    if (titleLower.includes('pizza')) {
+      return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Burgers
+    if (titleLower.includes('burger') || titleLower.includes('sandwich')) {
+      return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Chicken dishes
+    if (ingredientsText.includes('chicken') || titleLower.includes('chicken')) {
+      return 'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Beef dishes
+    if (ingredientsText.includes('beef') || titleLower.includes('beef')) {
+      return 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Rice dishes
+    if (titleLower.includes('fried rice')) {
+      return 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format';
+    }
+    if (titleLower.includes('rice') || ingredientsText.includes('rice')) {
+      return 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Soups
+    if (titleLower.includes('soup') || titleLower.includes('stew')) {
+      return 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Fish
+    if (ingredientsText.includes('fish') || ingredientsText.includes('salmon')) {
+      return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Only return salad for actual salads
+    if (titleLower.includes('salad')) {
+      return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format';
+    }
+    
+    // Return null if no specific match (let API handle it)
+    return null;
   };
 
   // Function to get recipe-specific image URL

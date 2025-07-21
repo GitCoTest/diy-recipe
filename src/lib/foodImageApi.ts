@@ -10,15 +10,26 @@ interface FoodImageResult {
 // TheMealDB API (Free)
 const searchTheMealDB = async (query: string): Promise<string | null> => {
   try {
+    console.log('🌐 Calling TheMealDB API for:', query);
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`);
+    console.log('📡 TheMealDB response status:', response.status);
+    
+    if (!response.ok) {
+      console.error('❌ TheMealDB API failed with status:', response.status);
+      return null;
+    }
+    
     const data = await response.json();
+    console.log('📊 TheMealDB data:', data);
     
     if (data.meals && data.meals.length > 0) {
+      console.log('✅ Found TheMealDB image:', data.meals[0].strMealThumb);
       return data.meals[0].strMealThumb;
     }
+    console.log('⚠️ No meals found in TheMealDB for:', query);
     return null;
   } catch (error) {
-    console.error('TheMealDB API error:', error);
+    console.error('💥 TheMealDB API error:', error);
     return null;
   }
 };
@@ -213,9 +224,9 @@ const getUnsplashFoodImage = (titleLower: string, ingredientsText: string): stri
     return 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&h=600&fit=crop&auto=format';
   }
   
-  // Generic delicious food (NOT salad!)
-  console.log('⚠️ Using generic food fallback for:', titleLower);
-  return 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&h=600&fit=crop&auto=format';
+  // Default to a beautiful, diverse food spread (NOT salad!)
+  console.log('⚠️ Using generic delicious food fallback for:', titleLower);
+  return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop&auto=format';
 };
 
 // Cache results to avoid repeated API calls (with debugging)
