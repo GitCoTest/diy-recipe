@@ -613,7 +613,7 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
         {/* Preview Image */}
         <div className="relative h-48 bg-gradient-to-br from-amber-100 to-orange-200 overflow-hidden">
           <img 
-            src={recipe.image || getRecipeImageUrl(recipe.title, recipe.ingredients)} 
+            src={recipe.image || dynamicImageUrl || getLocalFoodImage(recipe.title, recipe.ingredients) || getRecipeImageUrl(recipe.title, recipe.ingredients)} 
             alt={recipe.title}
             className="w-full h-full object-cover"
             onError={(e) => {
