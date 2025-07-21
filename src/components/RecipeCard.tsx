@@ -133,139 +133,85 @@ export default function RecipeCard({ recipe, onClose }: RecipeCardProps) {
     const titleLower = title.toLowerCase();
     const ingredientsText = ingredients.join(' ').toLowerCase();
     
-    console.log('🎯 Local image mapping for:', titleLower);
+    console.log('🎯 Smart image classification for:', titleLower);
     
-    // Pasta dishes (very specific matching first)
-    if (titleLower.includes('aglio') && titleLower.includes('olio')) {
-      return 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('carbonara')) {
-      return 'https://images.unsplash.com/photo-1572441713132-51c75654db73?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('spaghetti') || titleLower.includes('linguine') || titleLower.includes('pasta')) {
-      return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&auto=format';
-    }
+    // Smart cuisine detection based on ingredients and keywords
+    const cuisinePatterns: Record<string, string[]> = {
+      mexican: ['tortilla', 'fajita', 'taco', 'burrito', 'enchilada', 'quesadilla', 'nachos', 'salsa', 'cilantro', 'jalapeño', 'chipotle', 'cumin', 'lime'],
+      italian: ['pasta', 'spaghetti', 'linguine', 'fettuccine', 'penne', 'rigatoni', 'marinara', 'basil', 'oregano', 'parmesan', 'mozzarella', 'aglio', 'olio'],
+      asian: ['stir fry', 'ramen', 'sushi', 'curry', 'soy sauce', 'sesame', 'ginger', 'garlic', 'rice vinegar', 'miso', 'teriyaki', 'pad thai'],
+      american: ['burger', 'sandwich', 'bbq', 'pancake', 'waffle', 'mac and cheese', 'meatloaf', 'fried chicken'],
+      mediterranean: ['hummus', 'falafel', 'gyro', 'pita', 'olive oil', 'feta', 'olives', 'tzatziki'],
+      indian: ['curry', 'turmeric', 'cumin', 'coriander', 'garam masala', 'naan', 'basmati', 'tikka'],
+      dessert: ['cake', 'cookie', 'brownie', 'muffin', 'cupcake', 'chocolate', 'vanilla', 'sugar', 'flour', 'baking powder']
+    };
     
-    // Desserts and baked goods
-    if (titleLower.includes('mug cake') || (titleLower.includes('microwave') && titleLower.includes('cake'))) {
-      return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('chocolate') && titleLower.includes('cake')) {
-      return 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('peanut butter') && titleLower.includes('cake')) {
-      return 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('brownie')) {
-      return 'https://images.unsplash.com/photo-1556906918-a05b6e2c94ad?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('cookie')) {
-      return 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('pancake')) {
-      return 'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&h=600&fit=crop&auto=format';
-    }
+    // Image database by cuisine type
+    const cuisineImages: Record<string, string> = {
+      mexican: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format',
+      italian: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&h=600&fit=crop&auto=format',
+      asian: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format',
+      american: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop&auto=format',
+      mediterranean: 'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format',
+      indian: 'https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=800&h=600&fit=crop&auto=format',
+      dessert: 'https://images.unsplash.com/photo-1488477304112-4944851de03d?w=800&h=600&fit=crop&auto=format'
+    };
     
-    // Pizza
-    if (titleLower.includes('pizza')) {
-      return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&h=600&fit=crop&auto=format';
-    }
+    // Calculate cuisine scores based on keyword matches
+    const cuisineScores: Record<string, number> = {};
+    Object.keys(cuisinePatterns).forEach((cuisine: string) => {
+      let score = 0;
+      cuisinePatterns[cuisine].forEach((keyword: string) => {
+        if (titleLower.includes(keyword) || ingredientsText.includes(keyword)) {
+          score += titleLower.includes(keyword) ? 2 : 1; // Title matches worth more
+        }
+      });
+      cuisineScores[cuisine] = score;
+    });
     
-    // Mexican/Latin American food
-    if (titleLower.includes('tortilla') || titleLower.includes('tortillas')) {
-      return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('taco') || titleLower.includes('tacos')) {
-      return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('burrito') || titleLower.includes('quesadilla')) {
-      return 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('enchilada') || titleLower.includes('fajita')) {
-      return 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('nachos')) {
-      return 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=800&h=600&fit=crop&auto=format';
+    // Find best matching cuisine
+    const bestCuisine = Object.keys(cuisineScores).reduce((a: string, b: string) => 
+      cuisineScores[a] > cuisineScores[b] ? a : b
+    );
+    
+    console.log('🧠 Cuisine scores:', cuisineScores);
+    console.log('🎯 Best match:', bestCuisine, 'with score:', cuisineScores[bestCuisine]);
+    
+    // Return image if we have a confident match (score > 0)
+    if (cuisineScores[bestCuisine] > 0) {
+      return cuisineImages[bestCuisine];
     }
     
-    // Burgers
-    if (titleLower.includes('burger') || titleLower.includes('sandwich')) {
-      return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop&auto=format';
+    // Fallback: analyze by main ingredient type
+    const proteinImages: Record<string, string> = {
+      chicken: 'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop&auto=format',
+      beef: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format',
+      fish: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format',
+      pork: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format',
+      shrimp: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop&auto=format'
+    };
+    
+    // Check for protein matches
+    for (const [protein, image] of Object.entries(proteinImages)) {
+      if (ingredientsText.includes(protein) || titleLower.includes(protein)) {
+        console.log('🥩 Protein match:', protein);
+        return image;
+      }
     }
     
-    // Chicken dishes
-    if (ingredientsText.includes('chicken') || titleLower.includes('chicken')) {
-      return 'https://images.unsplash.com/photo-1532636248429-677dc5f02446?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Beef dishes
-    if (ingredientsText.includes('beef') || titleLower.includes('beef')) {
-      return 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Rice dishes
-    if (titleLower.includes('fried rice')) {
-      return 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('rice') || ingredientsText.includes('rice')) {
-      return 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Soups
+    // Dish type fallbacks
     if (titleLower.includes('soup') || titleLower.includes('stew')) {
       return 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&h=600&fit=crop&auto=format';
     }
-    
-    // Breakfast items
-    if (titleLower.includes('french toast') || titleLower.includes('toast')) {
-      return 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('oatmeal') || titleLower.includes('porridge')) {
-      return 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('eggs') || titleLower.includes('omelet')) {
-      return 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Bread and baked goods
-    if (titleLower.includes('bread') || titleLower.includes('loaf')) {
-      return 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('muffin') || titleLower.includes('cupcake')) {
-      return 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('donut') || titleLower.includes('doughnut')) {
-      return 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Asian cuisine
-    if (titleLower.includes('stir fry') || titleLower.includes('stir-fry')) {
-      return 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('ramen') || titleLower.includes('noodle soup')) {
-      return 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('sushi') || titleLower.includes('roll')) {
-      return 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('curry')) {
-      return 'https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Mediterranean
-    if (titleLower.includes('hummus') || titleLower.includes('falafel')) {
-      return 'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format';
-    }
-    if (titleLower.includes('gyro') || titleLower.includes('pita')) {
-      return 'https://images.unsplash.com/photo-1621961458348-f013d219b50c?w=800&h=600&fit=crop&auto=format';
-    }
-    
-    // Only return salad for actual salads
     if (titleLower.includes('salad')) {
       return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop&auto=format';
     }
+    if (titleLower.includes('rice')) {
+      return 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=800&h=600&fit=crop&auto=format';
+    }
     
-    // Return null if no specific match (let API handle it)
+    // No specific match found
+    console.log('⚠️ No specific cuisine/ingredient match found');
     return null;
   };
 
